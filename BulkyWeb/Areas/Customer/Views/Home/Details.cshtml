@@ -1,0 +1,997 @@
+﻿@model Bulky.Models.Models.ShoppingCart
+
+@{
+    ViewData["Title"] = $"{Model.Product.Title} - Book Details";
+}
+
+<!-- Book Details Hero Section -->
+<section class="book-details-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%232C3E50\">📖</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%232C3E50\">✨</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white p-3 rounded-3 shadow-sm border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-house-door me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="text-muted">Books</span>
+                        </li>
+                        @if (Model.Product.Category != null)
+                        {
+                            <li class="breadcrumb-item">
+                                <span class="text-muted">@Model.Product.Category.Name</span>
+                            </li>
+                        }
+                        <li class="breadcrumb-item active text-success fw-medium" aria-current="page">
+                            @(Model.Product.Title.Length > 30 ? Model.Product.Title.Substring(0, 30) + "..." : Model.Product.Title)
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Book Details Section -->
+<section class="book-details-main py-4 py-md-5">
+    <div class="container">
+        <div class="row g-4 g-md-5">
+            <!-- Book Cover & Images -->
+            <div class="col-12 col-lg-5">
+                <div class="book-cover-section">
+                    <!-- Main Book Cover -->
+                    <div class="main-book-cover position-relative mb-4">
+                        <div class="book-cover-container" style="max-width: 400px; margin: 0 auto;">
+                            @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+                            {
+                                <img src="@Model.Product.ImageUrl" alt="@Model.Product.Title" 
+                                     class="img-fluid rounded-3 shadow-lg w-100" 
+                                     style="aspect-ratio: 3/4; object-fit: cover; transition: transform 0.3s ease;" />
+                            }
+                            else
+                            {
+                                <div class="book-placeholder d-flex align-items-center justify-content-center rounded-3 shadow-lg" 
+                                     style="aspect-ratio: 3/4; background: linear-gradient(145deg, #8B4513, #A0522D);">
+                                    <div class="text-center text-white p-4">
+                                        <i class="bi bi-book display-2 mb-3"></i>
+                                        <h5 class="fw-medium">@Model.Product.Title</h5>
+                                        <p class="small opacity-75">by @Model.Product.Author</p>
+                                    </div>
+                                </div>
+                            }
+                            
+                            <!-- Book Condition Badge -->
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge text-white px-3 py-2 rounded-pill" style="background: linear-gradient(135deg, #27AE60, #2ECC71); font-size: 0.8rem;">
+                                    <i class="bi bi-check-circle me-1"></i>New Condition
+                                </span>
+                            </div>
+                            
+                            <!-- Category Badge -->
+                            @if (Model.Product.Category != null)
+                            {
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge text-white px-3 py-2 rounded-pill" style="background: linear-gradient(135deg, #2C3E50, #34495E); font-size: 0.8rem;">
+                                        <i class="bi bi-collection me-1"></i>@Model.Product.Category.Name
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <!-- Shopping Cart Form -->
+                    <div class="shopping-cart-section">
+                        <form asp-action="Details" method="post" id="cartForm" class="needs-validation" novalidate>
+                            @* Only include ProductId - do not include Id property to prevent identity insert error *@
+                            <input type="hidden" asp-for="ProductId" />
+                            
+                            <!-- Quantity Selection -->
+                            <div class="quantity-section mb-4">
+                                <div class="card border-0 shadow-sm" style="border-radius: 15px; background: linear-gradient(145deg, #fff, #f8f9fa);">
+                                    <div class="card-body p-4">
+                                        <h6 class="fw-bold mb-3 text-primary">
+                                            <i class="bi bi-hash me-2"></i>Select Quantity
+                                        </h6>
+                                        
+                                        <div class="quantity-controls d-flex align-items-center justify-content-center mb-3">
+                                            <button type="button" class="btn btn-outline-primary btn-lg" onclick="decreaseQuantity()" style="border-radius: 50%; width: 50px; height: 50px;">
+                                                <i class="bi bi-dash fw-bold"></i>
+                                            </button>
+                                            
+                                            <div class="quantity-input mx-4">
+                                                <input asp-for="Count" 
+                                                       class="form-control form-control-lg text-center fw-bold border-primary" 
+                                                       style="width: 80px; border-width: 2px; border-radius: 15px; font-size: 1.2rem;"
+                                                       min="1" max="1000" 
+                                                       value="1"
+                                                       id="quantityInput" />
+                                            </div>
+                                            
+                                            <button type="button" class="btn btn-outline-primary btn-lg" onclick="increaseQuantity()" style="border-radius: 50%; width: 50px; height: 50px;">
+                                                <i class="bi bi-plus fw-bold"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <span asp-validation-for="Count" class="text-danger small d-block text-center"></span>
+                                        
+                                        <!-- Dynamic Price Display -->
+                                        <div class="dynamic-price text-center mt-3">
+                                            <div class="price-breakdown p-3 rounded-3" style="background: linear-gradient(145deg, rgba(75, 113, 71, 0.05), rgba(87, 133, 83, 0.05));">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="bi bi-calculator me-1"></i>Price Calculation
+                                                </h6>
+                                                <div id="priceDisplay" class="fw-bold text-primary" style="font-size: 1.1rem;">
+                                                    <!-- Price will be calculated here -->
+                                                </div>
+                                                <small class="text-muted d-block mt-1" id="priceNote">
+                                                    <!-- Price note will be displayed here -->
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Actions -->
+                            <div class="quick-actions d-grid gap-3">
+                                <button type="submit" class="btn btn-lg fw-medium shadow-lg" 
+                                        style="background: linear-gradient(135deg, #4b7147, #578553); color: white; border: none; border-radius: 15px;" 
+                                        id="addToCartBtn">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                    <span class="d-none d-sm-inline">- <span id="totalPrice">@Model.Product.Price.ToString("C")</span></span>
+                                </button>
+                                
+                                <button type="button" class="btn btn-outline-warning btn-lg fw-medium shadow-sm" 
+                                        style="border-radius: 15px;" onclick="addToWishlist()">
+                                    <i class="bi bi-heart me-2"></i>Add to Wishlist
+                                </button>
+                                
+                                <!-- Quick Buy Button (Optional) -->
+                                <button type="button" class="btn btn-outline-success btn-lg fw-medium shadow-sm" 
+                                        style="border-radius: 15px;" onclick="buyNow()">
+                                    <i class="bi bi-lightning me-2"></i>Buy Now
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Book Information -->
+            <div class="col-12 col-lg-7">
+                <div class="book-info-section">
+                    <!-- Book Header -->
+                    <div class="book-header mb-4">
+                        <h1 class="book-title fw-bold mb-3" style="color: #2C3E50; font-family: 'Georgia', serif; line-height: 1.2;">
+                            @Model.Product.Title
+                        </h1>
+                        <div class="book-author mb-3">
+                            <h4 class="text-muted mb-0" style="font-style: italic;">
+                                <i class="bi bi-pen me-2 text-primary"></i>by @Model.Product.Author
+                            </h4>
+                        </div>
+                        
+                        <!-- Rating & Reviews (Placeholder) -->
+                        <div class="book-rating mb-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stars text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                    <span class="text-muted ms-2">(4.5/5)</span>
+                                </div>
+                                <div class="review-count">
+                                    <small class="text-muted">Based on 127 reviews</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Details Cards -->
+                    <div class="book-details-cards mb-4">
+                        <div class="row g-3">
+                            <!-- ISBN Card -->
+                            <div class="col-6 col-md-4">
+                                <div class="detail-card card border-0 shadow-sm h-100" style="background: linear-gradient(145deg, #fff, #f8f9fa); border-radius: 12px;">
+                                    <div class="card-body text-center py-3">
+                                        <i class="bi bi-upc-scan text-primary fs-4 mb-2"></i>
+                                        <h6 class="fw-medium text-primary mb-1">ISBN</h6>
+                                        <p class="small text-muted mb-0 fw-medium">@Model.Product.ISBN</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Category Card -->
+                            @if (Model.Product.Category != null)
+                            {
+                                <div class="col-6 col-md-4">
+                                    <div class="detail-card card border-0 shadow-sm h-100" style="background: linear-gradient(145deg, #fff, #f8f9fa); border-radius: 12px;">
+                                        <div class="card-body text-center py-3">
+                                            <i class="bi bi-collection text-success fs-4 mb-2"></i>
+                                            <h6 class="fw-medium text-success mb-1">Genre</h6>
+                                            <p class="small text-muted mb-0 fw-medium">@Model.Product.Category.Name</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            
+                            <!-- Availability Card -->
+                            <div class="col-6 col-md-4">
+                                <div class="detail-card card border-0 shadow-sm h-100" style="background: linear-gradient(145deg, #fff, #f8f9fa); border-radius: 12px;">
+                                    <div class="card-body text-center py-3">
+                                        <i class="bi bi-check-circle text-success fs-4 mb-2"></i>
+                                        <h6 class="fw-medium text-success mb-1">Status</h6>
+                                        <p class="small text-muted mb-0 fw-medium">In Stock</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Description -->
+                    @if (!string.IsNullOrEmpty(Model.Product.Description))
+                    {
+                        <div class="book-description mb-4">
+                            <h5 class="fw-bold mb-3" style="color: #2C3E50;">
+                                <i class="bi bi-file-text me-2"></i>About This Book
+                            </h5>
+                            <div class="description-content p-4 rounded-3" style="background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-left: 4px solid #4b7147;">
+                                <p class="text-muted mb-0 lh-lg" style="font-size: 1.05rem;">
+                                    @Model.Product.Description
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    
+                    <!-- Pricing Section -->
+                    <div class="pricing-section">
+                        <h5 class="fw-bold mb-3" style="color: #2C3E50;">
+                            <i class="bi bi-currency-dollar me-2"></i>Pricing & Bulk Discounts
+                        </h5>
+                        
+                        <div class="pricing-cards">
+                            <div class="row g-3">
+                                <!-- Regular Price -->
+                                <div class="col-6 col-md-3">
+                                    <div class="price-card card border-0 shadow-sm text-center" style="background: linear-gradient(135deg, #27AE60, #2ECC71); border-radius: 15px;">
+                                        <div class="card-body py-3 text-white">
+                                            <h6 class="fw-medium mb-1 opacity-90">Regular Price</h6>
+                                            <h4 class="fw-bold mb-0">@Model.Product.Price.ToString("C")</h4>
+                                            <small class="opacity-75">1-49 copies</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 50+ Price -->
+                                <div class="col-6 col-md-3">
+                                    <div class="price-card card border-0 shadow-sm text-center" style="background: linear-gradient(135deg, #F39C12, #E67E22); border-radius: 15px;">
+                                        <div class="card-body py-3 text-white">
+                                            <h6 class="fw-medium mb-1 opacity-90">Bulk Price</h6>
+                                            <h4 class="fw-bold mb-0">@Model.Product.Price50.ToString("C")</h4>
+                                            <small class="opacity-75">50+ copies</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 100+ Price -->
+                                <div class="col-6 col-md-3">
+                                    <div class="price-card card border-0 shadow-sm text-center" style="background: linear-gradient(135deg, #8E44AD, #9B59B6); border-radius: 15px;">
+                                        <div class="card-body py-3 text-white">
+                                            <h6 class="fw-medium mb-1 opacity-90">Wholesale</h6>
+                                            <h4 class="fw-bold mb-0">@Model.Product.Price100.ToString("C")</h4>
+                                            <small class="opacity-75">100+ copies</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- List Price Comparison -->
+                                @if (Model.Product.ListPrice > Model.Product.Price)
+                                {
+                                    <div class="col-6 col-md-3">
+                                        <div class="price-card card border-0 shadow-sm text-center" style="background: linear-gradient(135deg, #95A5A6, #7F8C8D); border-radius: 15px;">
+                                            <div class="card-body py-3 text-white">
+                                                <h6 class="fw-medium mb-1 opacity-90">List Price</h6>
+                                                <h4 class="fw-bold mb-0 text-decoration-line-through">@Model.Product.ListPrice.ToString("C")</h4>
+                                                <small class="text-warning fw-bold">
+                                                    Save @((Model.Product.ListPrice - Model.Product.Price).ToString("C"))
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Book Information -->
+<section class="additional-info py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-pills nav-fill mb-4" id="bookInfoTabs" role="tablist" style="background: white; border-radius: 15px; padding: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-medium" id="details-tab" data-bs-toggle="pill" data-bs-target="#details" type="button" role="tab" style="border-radius: 10px;">
+                            <i class="bi bi-info-circle me-2"></i>Details
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-medium" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button" role="tab" style="border-radius: 10px;">
+                            <i class="bi bi-star me-2"></i>Reviews
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-medium" id="shipping-tab" data-bs-toggle="pill" data-bs-target="#shipping" type="button" role="tab" style="border-radius: 10px;">
+                            <i class="bi bi-truck me-2"></i>Shipping
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tabs Content -->
+                <div class="tab-content" id="bookInfoTabsContent">
+                    <!-- Details Tab -->
+                    <div class="tab-pane fade show active" id="details" role="tabpanel">
+                        <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4" style="color: #2C3E50;">📚 Book Specifications</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <dl class="row">
+                                            <dt class="col-sm-4 text-muted">Title:</dt>
+                                            <dd class="col-sm-8 fw-medium">@Model.Product.Title</dd>
+                                            
+                                            <dt class="col-sm-4 text-muted">Author:</dt>
+                                            <dd class="col-sm-8 fw-medium">@Model.Product.Author</dd>
+                                            
+                                            <dt class="col-sm-4 text-muted">ISBN:</dt>
+                                            <dd class="col-sm-8 fw-medium font-monospace">@Model.Product.ISBN</dd>
+                                            
+                                            @if (Model.Product.Category != null)
+                                            {
+                                                <dt class="col-sm-4 text-muted">Category:</dt>
+                                                <dd class="col-sm-8">
+                                                    <span class="badge bg-primary px-3 py-2">@Model.Product.Category.Name</span>
+                                                </dd>
+                                            }
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl class="row">
+                                            <dt class="col-sm-4 text-muted">Condition:</dt>
+                                            <dd class="col-sm-8">
+                                                <span class="badge bg-success px-3 py-2">New</span>
+                                            </dd>
+                                            
+                                            <dt class="col-sm-4 text-muted">Availability:</dt>
+                                            <dd class="col-sm-8 text-success fw-medium">
+                                                <i class="bi bi-check-circle me-1"></i>In Stock
+                                            </dd>
+                                            
+                                            <dt class="col-sm-4 text-muted">Format:</dt>
+                                            <dd class="col-sm-8 fw-medium">Physical Book</dd>
+                                            
+                                            <dt class="col-sm-4 text-muted">Language:</dt>
+                                            <dd class="col-sm-8 fw-medium">English</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reviews Tab -->
+                    <div class="tab-pane fade" id="reviews" role="tabpanel">
+                        <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4" style="color: #2C3E50;">⭐ Customer Reviews</h5>
+                                <div class="text-center py-5">
+                                    <i class="bi bi-star display-1 text-muted opacity-50"></i>
+                                    <h6 class="text-muted mt-3">Reviews coming soon!</h6>
+                                    <p class="text-muted">Be the first to review this book and help other readers.</p>
+                                    <button class="btn btn-primary" style="border-radius: 20px;">
+                                        <i class="bi bi-plus-circle me-2"></i>Write a Review
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Tab -->
+                    <div class="tab-pane fade" id="shipping" role="tabpanel">
+                        <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4" style="color: #2C3E50;">🚚 Shipping Information</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="shipping-option p-3 rounded-3" style="background: linear-gradient(145deg, #E8F5E8, #D4EDDA);">
+                                            <h6 class="fw-bold text-success mb-2">
+                                                <i class="bi bi-truck me-2"></i>Free Standard Shipping
+                                            </h6>
+                                            <p class="text-muted small mb-2">5-7 business days</p>
+                                            <p class="text-success fw-bold mb-0">FREE on all orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="shipping-option p-3 rounded-3" style="background: linear-gradient(145deg, #FFF3CD, #FFEAA7);">
+                                            <h6 class="fw-bold text-warning mb-2">
+                                                <i class="bi bi-lightning me-2"></i>Express Shipping
+                                            </h6>
+                                            <p class="text-muted small mb-2">2-3 business days</p>
+                                            <p class="text-warning fw-bold mb-0">$9.99</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 rounded-3" style="background: linear-gradient(145deg, #E3F2FD, #BBDEFB);">
+                                    <h6 class="fw-bold text-primary mb-2">
+                                        <i class="bi bi-shield-check me-2"></i>Our Shipping Promise
+                                    </h6>
+                                    <ul class="text-muted small mb-0">
+                                        <li>Secure packaging to protect your books</li>
+                                        <li>Tracking information provided</li>
+                                        <li>Easy returns within 30 days</li>
+                                        <li>International shipping available</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation Actions -->
+<section class="navigation-actions py-4" style="background: white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6">
+                <a asp-action="Index" class="btn btn-outline-secondary fw-medium" style="border-radius: 15px;">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Catalog
+                </a>
+            </div>
+            <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                    <button class="btn btn-outline-primary btn-sm" onclick="shareBook()" style="border-radius: 15px;">
+                        <i class="bi bi-share me-1"></i>Share
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="printDetails()" style="border-radius: 15px;">
+                        <i class="bi bi-printer me-1"></i>Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Product pricing data
+        const productPrices = {
+            regular: @Model.Product.Price,
+            bulk50: @Model.Product.Price50,
+            bulk100: @Model.Product.Price100,
+            listPrice: @Model.Product.ListPrice
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBookDetails();
+            initializeInteractions();
+            initializePriceComparison();
+            initializeQuantityControls();
+            updatePriceDisplay();
+        });
+
+        function initializeBookDetails() {
+            // Animate elements on load
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const animateElements = document.querySelectorAll('.detail-card, .price-card, .book-cover-container, .quantity-section');
+                animateElements.forEach((element, index) => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    element.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                    observer.observe(element);
+                });
+            }
+
+            // Initialize tabs with custom styling
+            const tabButtons = document.querySelectorAll('#bookInfoTabs button');
+            tabButtons.forEach(button => {
+                button.addEventListener('shown.bs.tab', function(e) {
+                    // Add active styling
+                    tabButtons.forEach(btn => {
+                        btn.style.backgroundColor = '';
+                        btn.style.color = '';
+                    });
+                    this.style.backgroundColor = '#4b7147';
+                    this.style.color = 'white';
+                });
+            });
+
+            // Set initial active tab style
+            const activeTab = document.querySelector('#bookInfoTabs .nav-link.active');
+            if (activeTab) {
+                activeTab.style.backgroundColor = '#4b7147';
+                activeTab.style.color = 'white';
+            }
+        }
+
+        function initializeInteractions() {
+            // Book cover hover effect
+            const bookCover = document.querySelector('.book-cover-container img, .book-placeholder');
+            if (bookCover) {
+                bookCover.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05) rotateY(5deg)';
+                    this.style.boxShadow = '0 25px 50px rgba(0,0,0,0.2)';
+                });
+
+                bookCover.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            }
+
+            // Detail cards hover effects
+            const detailCards = document.querySelectorAll('.detail-card');
+            detailCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    this.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+
+            // Price cards hover effects
+            const priceCards = document.querySelectorAll('.price-card');
+            priceCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.05)';
+                    this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+        }
+
+        function initializePriceComparison() {
+            // Highlight best value
+            const priceCards = document.querySelectorAll('.price-card');
+            
+            // Add "Best Value" badge to the most economical option
+            if (productPrices.bulk100 < productPrices.regular && productPrices.bulk100 < productPrices.bulk50) {
+                const bulk100Card = priceCards[2];
+                if (bulk100Card) {
+                    const badge = document.createElement('div');
+                    badge.className = 'position-absolute top-0 start-50 translate-middle';
+                    badge.innerHTML = '<span class="badge bg-danger px-2 py-1" style="font-size: 0.7rem;">Best Value</span>';
+                    badge.style.zIndex = '10';
+                    bulk100Card.style.position = 'relative';
+                    bulk100Card.appendChild(badge);
+                }
+            }
+        }
+
+        function initializeQuantityControls() {
+            const quantityInput = document.getElementById('quantityInput');
+            
+            // Add input validation
+            quantityInput.addEventListener('input', function() {
+                let value = parseInt(this.value) || 1;
+                
+                // Enforce min/max constraints
+                if (value < 1) {
+                    value = 1;
+                    this.value = value;
+                }
+                if (value > 1000) {
+                    value = 1000;
+                    this.value = value;
+                }
+                
+                updatePriceDisplay();
+            });
+
+            // Form submission validation
+            const form = document.getElementById('cartForm');
+            form.addEventListener('submit', function(e) {
+                const quantity = parseInt(quantityInput.value);
+                if (quantity < 1 || quantity > 1000) {
+                    e.preventDefault();
+                    showNotification('Please enter a quantity between 1 and 1000', 'error');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = document.getElementById('addToCartBtn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Adding to Cart...';
+                submitBtn.disabled = true;
+            });
+        }
+
+        function increaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            let value = parseInt(quantityInput.value) || 1;
+            if (value < 1000) {
+                quantityInput.value = value + 1;
+                updatePriceDisplay();
+            }
+        }
+
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            let value = parseInt(quantityInput.value) || 1;
+            if (value > 1) {
+                quantityInput.value = value - 1;
+                updatePriceDisplay();
+            }
+        }
+
+        function updatePriceDisplay() {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+            const priceDisplay = document.getElementById('priceDisplay');
+            const priceNote = document.getElementById('priceNote');
+            const totalPriceSpan = document.getElementById('totalPrice');
+            
+            let unitPrice, priceCategory, savings = '';
+            
+            // Determine price based on quantity
+            if (quantity >= 100) {
+                unitPrice = productPrices.bulk100;
+                priceCategory = 'Wholesale Price (100+)';
+            } else if (quantity >= 50) {
+                unitPrice = productPrices.bulk50;
+                priceCategory = 'Bulk Price (50+)';
+            } else {
+                unitPrice = productPrices.regular;
+                priceCategory = 'Regular Price';
+            }
+            
+            const totalPrice = unitPrice * quantity;
+            
+            // Calculate savings
+            if (quantity >= 100) {
+                const regularTotal = productPrices.regular * quantity;
+                const savedAmount = regularTotal - totalPrice;
+                if (savedAmount > 0) {
+                    savings = ` (Save ${savedAmount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })})`;
+                }
+            } else if (quantity >= 50) {
+                const regularTotal = productPrices.regular * quantity;
+                const savedAmount = regularTotal - totalPrice;
+                if (savedAmount > 0) {
+                    savings = ` (Save ${savedAmount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })})`;
+                }
+            }
+            
+            // Update displays
+            priceDisplay.innerHTML = `${quantity} × ${unitPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} = ${totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}${savings}`;
+            priceNote.textContent = priceCategory;
+            totalPriceSpan.textContent = totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            
+            // Add visual feedback for bulk discounts
+            if (quantity >= 50) {
+                priceDisplay.style.color = '#28a745';
+                priceDisplay.style.fontWeight = 'bold';
+            } else {
+                priceDisplay.style.color = '#0d6efd';
+                priceDisplay.style.fontWeight = 'bold';
+            }
+        }
+
+        function addToWishlist() {
+            const button = event.target.closest('button');
+            const icon = button.querySelector('i');
+            
+            if (icon.classList.contains('bi-heart')) {
+                icon.classList.replace('bi-heart', 'bi-heart-fill');
+                button.classList.remove('btn-outline-warning');
+                button.classList.add('btn-warning');
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                icon.classList.replace('bi-heart-fill', 'bi-heart');
+                button.classList.remove('btn-warning');
+                button.classList.add('btn-outline-warning');
+                showNotification('Removed from wishlist', 'info');
+            }
+        }
+
+        function buyNow() {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+            showNotification(`Redirecting to checkout with ${quantity} item(s)...`, 'info');
+            // Here you would redirect to checkout page
+            // window.location.href = `/checkout?productId=@Model.ProductId&quantity=${quantity}`;
+        }
+
+        function shareBook() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '@Model.Product.Title',
+                    text: 'Check out this book by @Model.Product.Author',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback to copy link
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('Link copied to clipboard!', 'success');
+            }
+        }
+
+        function printDetails() {
+            window.print();
+        }
+
+        function showNotification(message, type) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+            toast.style.borderRadius = '10px';
+            toast.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+
+        // Enhanced mobile interactions
+        if ('ontouchstart' in window) {
+            const interactiveElements = document.querySelectorAll('.btn, .detail-card, .price-card, .quantity-controls button');
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                element.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+    </script>
+}
+
+<style>
+    /* Literary Theme Styling */
+    .book-title {
+        font-family: 'Georgia', serif;
+        letter-spacing: -0.5px;
+    }
+
+    .book-author {
+        font-family: 'Georgia', serif;
+    }
+
+    /* Card Enhancements */
+    .detail-card, .price-card {
+        transition: all 0.3s ease;
+        border-radius: 12px !important;
+    }
+
+    .detail-card:hover, .price-card:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    /* Quantity Controls Styling */
+    .quantity-controls {
+        position: relative;
+    }
+
+    .quantity-controls button {
+        transition: all 0.3s ease;
+    }
+
+    .quantity-controls button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .quantity-controls button:active {
+        transform: scale(0.95);
+    }
+
+    #quantityInput {
+        transition: all 0.3s ease;
+    }
+
+    #quantityInput:focus {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 0.25rem rgba(75, 113, 71, 0.25);
+    }
+
+    /* Shopping Cart Section */
+    .shopping-cart-section {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+
+    .dynamic-price {
+        transition: all 0.3s ease;
+    }
+
+    /* Tab Styling */
+    .nav-pills .nav-link {
+        transition: all 0.3s ease;
+        border-radius: 10px !important;
+    }
+
+    .nav-pills .nav-link:hover {
+        background-color: rgba(75, 113, 71, 0.1);
+        color: #4b7147;
+    }
+
+    /* Book Cover 3D Effect */
+    .book-cover-container {
+        perspective: 1000px;
+    }
+
+    .book-cover-container img,
+    .book-placeholder {
+        transition: all 0.4s ease;
+        transform-style: preserve-3d;
+    }
+
+    /* Price Comparison Styling */
+    .price-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .price-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .price-card:hover::before {
+        left: 100%;
+    }
+
+    /* Form Validation Styling */
+    .was-validated .form-control:valid {
+        border-color: #28a745;
+        background-image: none;
+    }
+
+    .was-validated .form-control:invalid {
+        border-color: #dc3545;
+        background-image: none;
+    }
+
+    /* Responsive Enhancements */
+    @@media (max-width: 768px) {
+        .book-cover-container {
+            max-width: 300px !important;
+        }
+        
+        .book-title {
+            font-size: 1.5rem !important;
+        }
+        
+        .price-card .card-body {
+            padding: 1rem !important;
+        }
+        
+        .detail-card .card-body {
+            padding: 0.75rem !important;
+        }
+
+        .quantity-controls {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quantity-controls button {
+            width: 40px;
+            height: 40px;
+        }
+
+        .shopping-cart-section {
+            position: relative;
+            top: auto;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .book-cover-container {
+            max-width: 250px !important;
+        }
+        
+        .book-title {
+            font-size: 1.25rem !important;
+        }
+
+        .quantity-input {
+            margin: 0 15px;
+        }
+
+        #quantityInput {
+            width: 60px;
+        }
+    }
+
+    /* Print Styles */
+    @@media print {
+        .navigation-actions,
+        .shopping-cart-section,
+        #bookInfoTabs {
+            display: none !important;
+        }
+        
+        .book-details-main {
+            page-break-inside: avoid;
+        }
+    }
+
+    /* Loading States */
+    .btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #4b7147, #578553);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #3a5a39, #4a6b4a);
+    }
+</style>

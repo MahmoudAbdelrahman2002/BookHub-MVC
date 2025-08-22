@@ -1,0 +1,132 @@
+@model Bulky.Models.ViewModels.ShoppingCartViewModel
+
+@if (Model.ShoppingCartList.Any())
+{
+    <!-- Cart Preview Items -->
+    <div class="cart-preview-items">
+        @{
+            var itemsToShow = Model.ShoppingCartList.Take(3);
+            var remainingItems = Model.ShoppingCartList.Count() - 3;
+        }
+        
+        @foreach (var item in itemsToShow)
+        {
+            <div class="cart-preview-item d-flex align-items-center">
+                <!-- Product Image -->
+                <div class="flex-shrink-0 me-3">
+                    @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                    {
+                        <img src="@item.Product.ImageUrl" alt="@item.Product.Title" class="cart-preview-image">
+                    }
+                    else
+                    {
+                        <div class="cart-preview-image bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-book text-white"></i>
+                        </div>
+                    }
+                </div>
+                
+                <!-- Product Details -->
+                <div class="flex-grow-1">
+                    <h6 class="mb-1 fw-medium text-truncate" style="max-width: 200px;">@item.Product.Title</h6>
+                    <small class="text-muted">by @item.Product.Author</small>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <small class="text-primary fw-bold">
+                            Qty: @item.Count
+                        </small>
+                        <small class="text-success fw-bold">
+                            @{
+                                decimal itemPrice = item.Count >= 100 ? (decimal)item.Product.Price100 :
+                                                   item.Count >= 50 ? (decimal)item.Product.Price50 :
+                                                   (decimal)item.Product.Price;
+                                decimal itemTotal = itemPrice * item.Count;
+                            }
+                            @itemTotal.ToString("C")
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        @if (remainingItems > 0)
+        {
+            <div class="cart-preview-more text-center py-2">
+                <small class="text-muted">
+                    <i class="bi bi-three-dots"></i>
+                    and @remainingItems more item@(remainingItems > 1 ? "s" : "")
+                </small>
+            </div>
+        }
+    </div>
+    
+    <!-- Cart Preview Footer -->
+    <div class="cart-preview-total">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Total:</span>
+            <span class="h6 fw-bold mb-0">@Model.OrderHeader.OrderTotal.ToString("C")</span>
+        </div>
+        
+        <div class="d-grid gap-2">
+            <a asp-area="Customer" asp-controller="Cart" asp-action="Index" 
+               class="btn btn-light btn-sm fw-medium">
+                <i class="bi bi-cart me-1"></i>View Cart (@Model.ShoppingCartList.Sum(x => x.Count))
+            </a>
+            <button class="btn btn-success btn-sm fw-medium" onclick="proceedToCheckout()">
+                <i class="bi bi-credit-card me-1"></i>Checkout
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Empty Cart Preview -->
+    <div class="cart-preview-empty">
+        <i class="bi bi-cart-x"></i>
+        <h6 class="mt-2 mb-1">Your cart is empty</h6>
+        <p class="text-muted small mb-3">Start shopping to add items</p>
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index" 
+           class="btn btn-primary btn-sm">
+            <i class="bi bi-shop me-1"></i>Continue Shopping
+        </a>
+    </div>
+}
+
+<script>
+    function proceedToCheckout() {
+        // Close the dropdown
+        const cartDropdown = document.getElementById('cartDropdown');
+        if (cartDropdown) {
+            cartDropdown.classList.remove('show');
+        }
+        
+        // Navigate to checkout (placeholder for now)
+        window.location.href = '/Customer/Cart';
+    }
+</script>
+
+<style>
+    /* Additional cart preview specific styles */
+    .cart-preview-more {
+        border-top: 1px solid #e9ecef;
+        background-color: #f8f9fa;
+    }
+
+    .cart-preview-item .cart-preview-image {
+        border: 1px solid #e9ecef;
+    }
+
+    .cart-preview-total .btn {
+        border-radius: 6px;
+        border: none;
+    }
+
+    .cart-preview-total .btn-light {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #4b7147;
+    }
+
+    .cart-preview-total .btn-light:hover {
+        background-color: white;
+        color: #3a5a39;
+    }
+</style>

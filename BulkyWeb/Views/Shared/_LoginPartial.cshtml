@@ -1,0 +1,208 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Bulky.Utility
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle px-3 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i>
+            <span class="d-none d-md-inline">@UserManager.GetUserName(User)</span>
+            <span class="d-md-none">Account</span>
+            @if (User.IsInRole(SD.Role_Admin))
+            {
+                <span class="badge bg-danger ms-1" style="font-size: 0.6rem;">Admin</span>
+            }
+            else if (User.IsInRole(SD.Role_Employee))
+            {
+                <span class="badge bg-warning text-dark ms-1" style="font-size: 0.6rem;">Staff</span>
+            }
+            else if (User.IsInRole(SD.Role_User_Comp))
+            {
+                <span class="badge bg-info ms-1" style="font-size: 0.6rem;">Company</span>
+            }
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="min-width: 220px;">
+            <li>
+                <h6 class="dropdown-header text-primary fw-bold">
+                    <i class="bi bi-person me-1"></i>Account Settings
+                </h6>
+                @if (User.IsInRole(SD.Role_Admin))
+                {
+                    <small class="text-danger fw-bold px-3">
+                        <i class="bi bi-shield-check me-1"></i>Administrator Access
+                    </small>
+                }
+                else if (User.IsInRole(SD.Role_Employee))
+                {
+                    <small class="text-warning fw-bold px-3">
+                        <i class="bi bi-briefcase me-1"></i>Employee Access
+                    </small>
+                }
+                else if (User.IsInRole(SD.Role_User_Comp))
+                {
+                    <small class="text-info fw-bold px-3">
+                        <i class="bi bi-building me-1"></i>Company Account
+                    </small>
+                }
+                else
+                {
+                    <small class="text-success fw-bold px-3">
+                        <i class="bi bi-person me-1"></i>Customer Account
+                    </small>
+                }
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="bi bi-gear me-2 text-primary"></i>
+                    <span>Manage Account</span>
+                    <small class="text-muted d-block">Profile & settings</small>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/Email">
+                    <i class="bi bi-envelope me-2 text-info"></i>
+                    <span>Email Settings</span>
+                    <small class="text-muted d-block">Change email address</small>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
+                    <i class="bi bi-shield-lock me-2 text-warning"></i>
+                    <span>Change Password</span>
+                    <small class="text-muted d-block">Update security</small>
+                </a>
+            </li>
+            
+            <!-- Admin-only quick actions -->
+            @if (User.IsInRole(SD.Role_Admin))
+            {
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <h6 class="dropdown-header text-danger fw-bold" style="font-size: 0.7rem;">
+                        <i class="bi bi-lightning me-1"></i>Admin Quick Actions
+                    </h6>
+                </li>
+                <li>
+                    <a class="dropdown-item py-1" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                        <i class="bi bi-tag me-2 text-primary"></i>
+                        <span style="font-size: 0.85rem;">Manage Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-1" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                        <i class="bi bi-book me-2 text-success"></i>
+                        <span style="font-size: 0.85rem;">Manage Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-1" asp-area="Admin" asp-controller="User" asp-action="Index">
+                        <i class="bi bi-people me-2 text-danger"></i>
+                        <span style="font-size: 0.85rem;">Manage Users</span>
+                    </a>
+                </li>
+            }
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form class="dropdown-item p-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="btn btn-link dropdown-item text-danger py-2 border-0 w-100 text-start">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        <span>Logout</span>
+                        <small class="text-muted d-block">Sign out of account</small>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link px-3 text-white" asp-area="Identity" asp-page="/Account/Login">
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            <span class="d-none d-sm-inline">Login</span>
+            <span class="d-sm-none">Sign In</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link px-3 text-white" asp-area="Identity" asp-page="/Account/Register">
+            <i class="bi bi-person-plus me-1"></i>
+            <span class="d-none d-sm-inline">Register</span>
+            <span class="d-sm-none">Sign Up</span>
+        </a>
+    </li>
+}
+</ul>
+
+<style>
+    /* Enhanced login partial styling */
+    .navbar-nav .dropdown-menu {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin-top: 8px;
+    }
+    
+    .navbar-nav .dropdown-item {
+        border-radius: 8px;
+        margin: 2px 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .navbar-nav .dropdown-item:hover {
+        background-color: rgba(13, 110, 253, 0.08);
+        transform: translateX(2px);
+    }
+    
+    .navbar-nav .dropdown-item.text-danger:hover {
+        background-color: rgba(220, 53, 69, 0.08);
+    }
+    
+    .navbar-nav .dropdown-toggle::after {
+        margin-left: 0.5rem;
+    }
+    
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    /* Role badge styling */
+    .navbar-nav .badge {
+        animation: subtle-pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes subtle-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    
+    /* Mobile responsiveness */
+    @@media (max-width: 576px) {
+        .navbar-nav .dropdown-menu {
+            min-width: 180px !important;
+        }
+        
+        .dropdown-item small {
+            display: none;
+        }
+
+        .navbar-nav .badge {
+            display: none;
+        }
+    }
+
+    /* Admin quick actions styling */
+    .dropdown-header.text-danger {
+        background: linear-gradient(90deg, rgba(220, 53, 69, 0.1), transparent);
+        border-radius: 6px;
+        margin: 4px;
+        padding: 6px 12px;
+    }
+</style>

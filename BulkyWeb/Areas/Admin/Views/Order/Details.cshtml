@@ -1,0 +1,1019 @@
+﻿@model Bulky.Models.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = $"Order Details #{Model.OrderHeader.Id.ToString("D6")} - BulkyWeb";
+}
+
+<!-- Order Details Hero Section -->
+<section class="order-details-hero py-4 py-md-5" style="background: linear-gradient(135deg, #34495E 0%, #2C3E50 50%, #4A6741 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%23ffffff\">📋</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%23ffffff\">📦</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white bg-opacity-10 p-3 rounded-3 border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="text-decoration-none text-white">
+                                <i class="bi bi-house-door me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="text-decoration-none text-white">
+                                <i class="bi bi-clipboard-data me-1"></i>Orders
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-warning fw-medium" aria-current="page">
+                            <i class="bi bi-file-text me-1"></i>Order Details
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-8">
+                        <h1 class="display-6 fw-bold text-white mb-2" style="font-family: 'Georgia', serif;">
+                            <i class="bi bi-receipt me-3 text-warning"></i>
+                            Order #@Model.OrderHeader.Id.ToString("D6")
+                        </h1>
+                        <p class="text-white opacity-75 mb-0">
+                            <i class="bi bi-calendar me-1"></i>
+                            Placed on @Model.OrderHeader.OrderDate.ToString("MMMM dd, yyyy 'at' h:mm tt")
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                            <span class="badge bg-@@GetStatusColor(Model.OrderHeader.OrderStatus) px-4 py-2 fs-6">
+                                <i class="bi bi-@@GetStatusIcon(Model.OrderHeader.OrderStatus) me-1"></i>
+                                @Model.OrderHeader.OrderStatus
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Details Content -->
+<section class="order-details-content py-4 py-md-5">
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+            <!-- Left Column - Order Information -->
+            <div class="col-12 col-xl-8">
+                <!-- Customer Information Card -->
+                <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                    <div class="card-header text-white py-4" 
+                         style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #4A6741, #578553);">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-person-circle me-2"></i>Customer Information
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <div class="customer-detail">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                                            <i class="bi bi-person text-primary fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <label class="text-muted small fw-medium">Customer Name</label>
+                                            <div class="fw-bold text-dark fs-6">@Model.OrderHeader.Name</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="customer-detail">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                                            <i class="bi bi-telephone text-success fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <label class="text-muted small fw-medium">Phone Number</label>
+                                            <div class="fw-bold text-dark fs-6">
+                                                <a href="tel:@Model.OrderHeader.PhoneNumber" class="text-decoration-none">
+                                                    @Model.OrderHeader.PhoneNumber
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="customer-detail">
+                                    <div class="d-flex align-items-start mb-3">
+                                        <div class="icon-wrapper bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                                            <i class="bi bi-geo-alt text-info fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <label class="text-muted small fw-medium">Shipping Address</label>
+                                            <div class="fw-bold text-dark">
+                                                @Model.OrderHeader.StreetAddress<br>
+                                                @Model.OrderHeader.City, @Model.OrderHeader.State @Model.OrderHeader.PostalCode
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="customer-detail">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-wrapper bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                                            <i class="bi bi-envelope text-warning fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <label class="text-muted small fw-medium">Email Address</label>
+                                            <div class="fw-bold text-dark fs-6">
+                                                <a href="mailto:@Model.OrderHeader.ApplicationUser?.Email" class="text-decoration-none">
+                                                    @Model.OrderHeader.ApplicationUser?.Email
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items Card -->
+                <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                    <div class="card-header text-white py-4" 
+                         style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #8B4513, #A0522D);">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-bag-check me-2"></i>Order Items (@Model.OrderDetails.Count())
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Items Header (Desktop) -->
+                        <div class="items-header d-none d-md-block bg-light p-3 border-bottom">
+                            <div class="row fw-bold text-muted">
+                                <div class="col-6">Product</div>
+                                <div class="col-2 text-center">Price</div>
+                                <div class="col-2 text-center">Quantity</div>
+                                <div class="col-2 text-center">Subtotal</div>
+                            </div>
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="items-list">
+                            @foreach (var item in Model.OrderDetails)
+                            {
+                                var itemTotal = item.Price * item.Count;
+                                
+                                <div class="order-item p-3 p-md-4 border-bottom" data-item-id="@item.Id">
+                                    <div class="row align-items-center g-3">
+                                        <!-- Product Info -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <!-- Product Image -->
+                                                <div class="product-image me-3 flex-shrink-0">
+                                                    @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                                                    {
+                                                        <img src="@item.Product.ImageUrl" alt="@item.Product.Title" 
+                                                             class="img-fluid rounded-3 shadow-sm" 
+                                                             style="width: 70px; height: 90px; object-fit: cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="book-placeholder d-flex align-items-center justify-content-center rounded-3 shadow-sm" 
+                                                             style="width: 70px; height: 90px; background: linear-gradient(145deg, #8B4513, #A0522D);">
+                                                            <i class="bi bi-book text-white fs-5"></i>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                
+                                                <!-- Product Details -->
+                                                <div class="product-details flex-grow-1">
+                                                    <h6 class="product-title fw-bold mb-2 text-primary" style="font-family: 'Georgia', serif;">
+                                                        @item.Product?.Title
+                                                    </h6>
+                                                    <p class="product-author text-muted mb-2 small">
+                                                        <i class="bi bi-pen me-1"></i>by @item.Product?.Author
+                                                    </p>
+                                                    @if (item.Product?.Category != null)
+                                                    {
+                                                        <span class="badge bg-secondary bg-gradient small">
+                                                            <i class="bi bi-collection me-1"></i>@item.Product.Category.Name
+                                                        </span>
+                                                    }
+                                                    
+                                                    <!-- Mobile Display -->
+                                                    <div class="d-md-none mt-3">
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <small class="text-muted">Price:</small>
+                                                                <div class="fw-bold text-success">@item.Price.ToString("C")</div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <small class="text-muted">Qty:</small>
+                                                                <div class="fw-bold text-primary">@item.Count</div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <small class="text-muted">Total:</small>
+                                                                <div class="fw-bold text-warning">@itemTotal.ToString("C")</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Desktop Price Display -->
+                                        <div class="col-md-2 text-center d-none d-md-block">
+                                            <div class="fw-bold text-success fs-6">@item.Price.ToString("C")</div>
+                                        </div>
+
+                                        <!-- Desktop Quantity -->
+                                        <div class="col-md-2 text-center d-none d-md-block">
+                                            <span class="fw-bold text-primary fs-5">@item.Count</span>
+                                        </div>
+
+                                        <!-- Desktop Subtotal -->
+                                        <div class="col-md-2 text-center d-none d-md-block">
+                                            <div class="fw-bold text-warning fs-5">@itemTotal.ToString("C")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Information (if available) -->
+                @if (!string.IsNullOrEmpty(Model.OrderHeader.TrackingNumber) || !string.IsNullOrEmpty(Model.OrderHeader.Carrier))
+                {
+                    <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                        <div class="card-header text-white py-4" 
+                             style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #3498DB, #5DADE2);">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-truck me-2"></i>Shipping Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-4">
+                                @if (!string.IsNullOrEmpty(Model.OrderHeader.Carrier))
+                                {
+                                    <div class="col-12 col-md-6">
+                                        <div class="shipping-detail">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                                                    <i class="bi bi-truck text-primary fs-5"></i>
+                                                </div>
+                                                <div>
+                                                    <label class="text-muted small fw-medium">Carrier</label>
+                                                    <div class="fw-bold text-dark fs-6">@Model.OrderHeader.Carrier</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.OrderHeader.TrackingNumber))
+                                {
+                                    <div class="col-12 col-md-6">
+                                        <div class="shipping-detail">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                                                    <i class="bi bi-box-seam text-success fs-5"></i>
+                                                </div>
+                                                <div>
+                                                    <label class="text-muted small fw-medium">Tracking Number</label>
+                                                    <div class="fw-bold text-dark fs-6">
+                                                        <a href="#" class="text-decoration-none" onclick="trackPackage('@Model.OrderHeader.TrackingNumber')">
+                                                            @Model.OrderHeader.TrackingNumber
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.OrderHeader.ShippingDate != default(DateTime))
+                                {
+                                    <div class="col-12">
+                                        <div class="shipping-detail">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-wrapper bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                                                    <i class="bi bi-calendar-check text-info fs-5"></i>
+                                                </div>
+                                                <div>
+                                                    <label class="text-muted small fw-medium">Shipping Date</label>
+                                                    <div class="fw-bold text-dark fs-6">@Model.OrderHeader.ShippingDate.ToString("MMMM dd, yyyy")</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Right Column - Order Summary & Actions -->
+            <div class="col-12 col-xl-4">
+                <div class="order-summary-section position-sticky" style="top: 20px;">
+                    <!-- Order Summary Card -->
+                    <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                        <div class="card-header text-white py-4" 
+                             style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #27AE60, #2ECC71);">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-calculator me-2"></i>Order Summary
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="summary-details">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Items:</span>
+                                    <span class="fw-medium">@Model.OrderDetails.Sum(x => x.Count) books</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Subtotal:</span>
+                                    <span class="fw-medium">@Model.OrderHeader.OrderTotal.ToString("C")</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Shipping:</span>
+                                    <span class="text-success fw-medium">FREE</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Tax:</span>
+                                    <span class="fw-medium">$0.00</span>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="d-flex justify-content-between mb-4">
+                                    <span class="h5 fw-bold">Total:</span>
+                                    <span class="h4 fw-bold text-success">@Model.OrderHeader.OrderTotal.ToString("C")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Status Card -->
+                    <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                        <div class="card-header text-white py-4" 
+                             style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #E74C3C, #C0392B);">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-flag me-2"></i>Order Status
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="status-timeline">
+                                <div class="status-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon bg-@@GetStatusColor(Model.OrderHeader.OrderStatus) text-white rounded-circle p-2 me-3">
+                                            <i class="bi bi-@@GetStatusIcon(Model.OrderHeader.OrderStatus)"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">@Model.OrderHeader.OrderStatus</div>
+                                            <small class="text-muted">Current Status</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="status-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon bg-@@GetPaymentColor(Model.OrderHeader.PaymentStatus) text-white rounded-circle p-2 me-3">
+                                            <i class="bi bi-@@GetPaymentIcon(Model.OrderHeader.PaymentStatus)"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">@Model.OrderHeader.PaymentStatus</div>
+                                            <small class="text-muted">Payment Status</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Actions Card -->
+                    <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3 text-primary">
+                                <i class="bi bi-tools me-2"></i>Order Actions
+                            </h6>
+                            
+                            @using Microsoft.AspNetCore.Identity
+                            @inject SignInManager<IdentityUser> SignInManager
+                            @inject UserManager<IdentityUser> UserManager
+                            
+                            @if (SignInManager.IsSignedIn(User) && (User.IsInRole(Bulky.Utility.SD.Role_Admin) || User.IsInRole(Bulky.Utility.SD.Role_Employee)))
+                            {
+                                <!-- Admin/Employee Actions -->
+                                <div class="admin-actions mb-4">
+                                    <h6 class="text-success fw-bold mb-3">
+                                        <i class="bi bi-shield-check me-2"></i>Admin Actions
+                                    </h6>
+                                    
+                                    <div class="d-grid gap-2">
+                                        @if (Model.OrderHeader.OrderStatus == Bulky.Utility.SD.StatusPending || Model.OrderHeader.OrderStatus == Bulky.Utility.SD.StatusApproved)
+                                        {
+                                            <form asp-action="StartProcessing" method="post" class="d-inline">
+                                                <input type="hidden" name="orderId" value="@Model.OrderHeader.Id" />
+                                                <button type="submit" class="btn btn-info fw-medium w-100" 
+                                                        onclick="return confirm('Start processing this order?')">
+                                                    <i class="bi bi-gear-wide-connected me-2"></i>Start Processing
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (Model.OrderHeader.OrderStatus == Bulky.Utility.SD.StatusInProcess)
+                                        {
+                                            <button class="btn btn-success fw-medium" onclick="showShippingModal()">
+                                                <i class="bi bi-truck me-2"></i>Ship Order
+                                            </button>
+                                        }
+
+                                        @if (Model.OrderHeader.OrderStatus != Bulky.Utility.SD.StatusShipped && Model.OrderHeader.OrderStatus != Bulky.Utility.SD.StatusCancelled)
+                                        {
+                                            <form asp-action="CancelOrder" method="post" class="d-inline">
+                                                <input type="hidden" name="orderId" value="@Model.OrderHeader.Id" />
+                                                <button type="submit" class="btn btn-danger fw-medium w-100" 
+                                                        onclick="return confirm('Are you sure you want to cancel this order? This action cannot be undone.')">
+                                                    <i class="bi bi-x-circle me-2"></i>Cancel Order
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (User.IsInRole(Bulky.Utility.SD.Role_Admin))
+                                        {
+                                            <button class="btn btn-warning fw-medium" onclick="showEditModal()">
+                                                <i class="bi bi-pencil-square me-2"></i>Edit Order Details
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                            }
+                            
+                            <!-- General Actions -->
+                            <div class="general-actions">
+                                <h6 class="text-secondary fw-bold mb-3">
+                                    <i class="bi bi-list-task me-2"></i>General Actions
+                                </h6>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary fw-medium" onclick="printInvoice()">
+                                        <i class="bi bi-printer me-2"></i>Print Invoice
+                                    </button>
+                                    
+                                    <a asp-action="Index" class="btn btn-outline-secondary fw-medium">
+                                        <i class="bi bi-arrow-left me-2"></i>Back to Orders
+                                    </a>
+                                    
+                                    @if (Model.OrderHeader.OrderStatus == Bulky.Utility.SD.StatusShipped && !string.IsNullOrEmpty(Model.OrderHeader.TrackingNumber))
+                                    {
+                                        <button class="btn btn-outline-info fw-medium" onclick="trackPackage('@Model.OrderHeader.TrackingNumber')">
+                                            <i class="bi bi-geo-alt me-2"></i>Track Package
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Card -->
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3 text-primary">
+                                <i class="bi bi-clock-history me-2"></i>Order Timeline
+                            </h6>
+                            
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <div class="fw-medium">Order Placed</div>
+                                        <small class="text-muted">@Model.OrderHeader.OrderDate.ToString("MMM dd, yyyy h:mm tt")</small>
+                                    </div>
+                                </div>
+                                
+                                @if (Model.OrderHeader.PaymentDate != default(DateTime))
+                                {
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker bg-info"></div>
+                                        <div class="timeline-content">
+                                            <div class="fw-medium">Payment Processed</div>
+                                            <small class="text-muted">@Model.OrderHeader.PaymentDate.ToString("MMM dd, yyyy h:mm tt")</small>
+                                        </div>
+                                    </div>
+                                }
+                                
+                                @if (Model.OrderHeader.ShippingDate != default(DateTime))
+                                {
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker bg-warning"></div>
+                                        <div class="timeline-content">
+                                            <div class="fw-medium">Order Shipped</div>
+                                            <small class="text-muted">@Model.OrderHeader.ShippingDate.ToString("MMM dd, yyyy h:mm tt")</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Shipping Modal -->
+<div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="shippingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #27AE60, #2ECC71); border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title fw-bold" id="shippingModalLabel">
+                    <i class="bi bi-truck me-2"></i>Ship Order #@Model.OrderHeader.Id.ToString("D6")
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="ShipOrder" method="post">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="orderId" value="@Model.OrderHeader.Id" />
+                    
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select name="carrier" class="form-select border-success" required style="border-width: 2px;">
+                                    <option value="">Select Carrier</option>
+                                    <option value="FedEx">FedEx</option>
+                                    <option value="UPS">UPS</option>
+                                    <option value="USPS">USPS</option>
+                                    <option value="DHL">DHL</option>
+                                </select>
+                                <label class="text-success fw-medium">
+                                    <i class="bi bi-truck me-1"></i>Shipping Carrier
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" name="trackingNumber" class="form-control border-success" 
+                                       placeholder="Enter tracking number" required maxlength="50"
+                                       style="border-width: 2px;" />
+                                <label class="text-success fw-medium">
+                                    <i class="bi bi-box-seam me-1"></i>Tracking Number
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info border-0 mt-3" style="background: rgba(13, 202, 240, 0.1); border-left: 4px solid #0dcaf0 !important;">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Note:</strong> This will mark the order as shipped and update the shipping date.
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success fw-medium">
+                        <i class="bi bi-check-circle me-2"></i>Ship Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Order Modal (Admin Only) -->
+@if (User.IsInRole(Bulky.Utility.SD.Role_Admin))
+{
+    <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px; border: none;">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #F39C12, #E67E22); border-radius: 15px 15px 0 0;">
+                    <h5 class="modal-title fw-bold" id="editOrderModalLabel">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Order Details #@Model.OrderHeader.Id.ToString("D6")
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="UpdateOrderDetails" method="post">
+                    <div class="modal-body p-4">
+                        <input type="hidden" name="orderId" value="@Model.OrderHeader.Id" />
+                        
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" name="name" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.Name" required maxlength="100"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-person me-1"></i>Customer Name
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" name="phoneNumber" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.PhoneNumber" required maxlength="20"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-telephone me-1"></i>Phone Number
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" name="streetAddress" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.StreetAddress" required maxlength="200"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-house me-1"></i>Street Address
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="city" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.City" required maxlength="50"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-building me-1"></i>City
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="state" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.State" required maxlength="50"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-map me-1"></i>State
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="postalCode" class="form-control border-warning" 
+                                           value="@Model.OrderHeader.PostalCode" required maxlength="10"
+                                           style="border-width: 2px;" />
+                                    <label class="text-warning fw-medium">
+                                        <i class="bi bi-mailbox me-1"></i>Postal Code
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning border-0 mt-3" style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107 !important;">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Admin Only:</strong> These changes will update the customer's shipping information for this order.
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x me-1"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-warning fw-medium">
+                            <i class="bi bi-check-circle me-2"></i>Update Details
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeOrderDetails();
+            initializeMobileOptimizations();
+        });
+
+        function initializeOrderDetails() {
+            // Add hover effects to order items
+            const orderItems = document.querySelectorAll('.order-item');
+            orderItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(75, 113, 71, 0.02)';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+
+        function initializeMobileOptimizations() {
+            if ('ontouchstart' in window) {
+                const interactiveElements = document.querySelectorAll('.btn, .card');
+                interactiveElements.forEach(element => {
+                    element.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    element.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    });
+                });
+            }
+
+            // Optimize sticky positioning for mobile
+            const summarySection = document.querySelector('.order-summary-section');
+            if (summarySection && window.innerWidth <= 1200) {
+                summarySection.style.position = 'relative';
+                summarySection.style.top = 'auto';
+            }
+        }
+
+        function updateOrderStatus() {
+            const currentStatus = '@Model.OrderHeader.OrderStatus';
+            const statuses = ['Pending', 'Approved', 'In Process', 'Shipped', 'Cancelled'];
+            const newStatus = prompt(`Current status: ${currentStatus}\n\nEnter new status:\n${statuses.join(', ')}`, currentStatus);
+            
+            if (newStatus && statuses.includes(newStatus)) {
+                showNotification(`Order status updated to ${newStatus}`, 'success');
+                // Here you would make an AJAX call to update the status
+            }
+        }
+
+        function showShippingModal() {
+            const shippingModal = new bootstrap.Modal(document.getElementById('shippingModal'));
+            shippingModal.show();
+        }
+
+        function showEditModal() {
+            const editModal = new bootstrap.Modal(document.getElementById('editOrderModal'));
+            editModal.show();
+        }
+
+        function addShippingInfo() {
+            showShippingModal();
+        }
+
+        function trackPackage(trackingNumber) {
+            if (trackingNumber) {
+                // Determine carrier and create tracking URL
+                let trackingUrl = '';
+                
+                // Simple carrier detection based on tracking number format
+                if (trackingNumber.match(/^1Z/)) {
+                    // UPS
+                    trackingUrl = `https://www.ups.com/track?tracknum=${trackingNumber}`;
+                } else if (trackingNumber.match(/^\d{12}$/)) {
+                    // FedEx
+                    trackingUrl = `https://www.fedex.com/apps/fedextrack/?tracknumbers=${trackingNumber}`;
+                } else if (trackingNumber.match(/^\d{20,22}$/)) {
+                    // USPS
+                    trackingUrl = `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackingNumber}`;
+                } else {
+                    // Generic tracking
+                    showNotification(`Tracking Number: ${trackingNumber}`, 'info');
+                    return;
+                }
+                
+                // Open tracking URL in new window
+                window.open(trackingUrl, '_blank');
+                showNotification(`Opening tracking for: ${trackingNumber}`, 'info');
+            }
+        }
+
+        function printInvoice() {
+            window.print();
+        }
+
+        function showNotification(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '350px';
+            toast.style.borderRadius = '12px';
+            toast.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+    </script>
+}
+
+@functions {
+    private string GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Pending" => "warning",
+            "Approved" => "info",
+            "In Process" => "primary",
+            "Shipped" => "success",
+            "Cancelled" => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private string GetStatusIcon(string status)
+    {
+        return status switch
+        {
+            "Pending" => "clock",
+            "Approved" => "check-circle",
+            "In Process" => "gear",
+            "Shipped" => "truck",
+            "Cancelled" => "x-circle",
+            _ => "question-circle"
+        };
+    }
+
+    private string GetPaymentColor(string payment)
+    {
+        return payment switch
+        {
+            "Pending" => "warning",
+            "Approved" => "success",
+            "Delayed For Approval" => "info",
+            "Rejected" => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private string GetPaymentIcon(string payment)
+    {
+        return payment switch
+        {
+            "Pending" => "clock",
+            "Approved" => "check-circle",
+            "Delayed For Approval" => "hourglass-split",
+            "Rejected" => "x-circle",
+            _ => "question-circle"
+        };
+    }
+}
+
+<style>
+    /* Order Details Styling */
+    .order-details-hero {
+        min-height: 30vh;
+    }
+
+    .customer-detail, .shipping-detail {
+        transition: all 0.2s ease;
+    }
+
+    .customer-detail:hover, .shipping-detail:hover {
+        transform: translateX(5px);
+    }
+
+    .icon-wrapper {
+        transition: all 0.3s ease;
+    }
+
+    .icon-wrapper:hover {
+        transform: scale(1.1);
+    }
+
+    .order-item {
+        transition: all 0.3s ease;
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Timeline Styling */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #4A6741, #578553);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -30px;
+        top: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .timeline-content {
+        background: rgba(75, 113, 71, 0.05);
+        padding: 10px 15px;
+        border-radius: 8px;
+        border-left: 3px solid #4A6741;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .display-6 {
+            font-size: 1.6rem !important;
+        }
+        
+        .order-summary-section {
+            position: relative !important;
+            top: auto !important;
+        }
+        
+        .product-image img,
+        .book-placeholder {
+            width: 50px !important;
+            height: 65px !important;
+        }
+        
+        .icon-wrapper {
+            width: 40px !important;
+            height: 40px !important;
+            padding: 0.5rem !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-6 {
+            font-size: 1.4rem !important;
+        }
+        
+        .card-body {
+            padding: 1rem !important;
+        }
+        
+        .customer-detail, .shipping-detail {
+            margin-bottom: 1rem;
+        }
+    }
+
+    /* Print Styles */
+    @@media print {
+        .order-summary-section .card:last-child,
+        .btn,
+        .badge {
+            display: none !important;
+        }
+        
+        .card {
+            border: 1px solid #dee2e6 !important;
+            box-shadow: none !important;
+        }
+        
+        .order-details-hero {
+            background: none !important;
+            color: black !important;
+        }
+    }
+
+    /* Animation Keyframes */
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        animation: slideInUp 0.6s ease-out;
+    }
+</style>
+

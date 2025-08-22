@@ -1,0 +1,514 @@
+﻿@model Bulky.Models.Models.Product
+
+@{
+    ViewData["Title"] = $"Delete Product - {Model.Title}";
+}
+
+<!-- Delete Confirmation Hero Section -->
+<section class="delete-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%23dc3545\">⚠️</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%23dc3545\">🗑️</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white p-3 rounded-3 shadow-sm border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-grid-3x3 me-1"></i>Product Management
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="text-muted">@Model.Title</span>
+                        </li>
+                        <li class="breadcrumb-item active text-danger fw-medium" aria-current="page">
+                            Delete Confirmation
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Delete Confirmation Section -->
+<section class="delete-confirmation py-4 py-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <!-- Warning Card -->
+                <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px; overflow: hidden;">
+                    <!-- Card Header -->
+                    <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #dc3545, #c82333); position: relative;">
+                        <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"50\" font-size=\"30\" fill=\"white\">⚠️</text></svg>'); background-size: 80px 80px;"></div>
+                        <div class="text-center position-relative">
+                            <div class="mb-3">
+                                <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+                            </div>
+                            <h1 class="h3 fw-bold mb-2">
+                                <i class="bi bi-trash me-2"></i>Delete Product Confirmation
+                            </h1>
+                            <p class="mb-0 opacity-90">This action cannot be undone. Please review the product details before proceeding.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row g-4">
+                            <!-- Product Image & Basic Info -->
+                            <div class="col-12 col-md-4">
+                                <div class="product-preview text-center">
+                                    <!-- Product Image -->
+                                    <div class="product-image-container mb-3">
+                                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                        {
+                                            <img src="@Model.ImageUrl" alt="@Model.Title" 
+                                                 class="img-fluid rounded-3 shadow border border-danger"
+                                                 style="max-width: 250px; max-height: 300px; object-fit: cover; border-width: 3px !important; filter: grayscale(20%);" />
+                                        }
+                                        else
+                                        {
+                                            <div class="product-placeholder d-flex align-items-center justify-content-center rounded-3 shadow border border-danger" 
+                                                 style="width: 250px; height: 300px; background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-width: 3px !important; margin: 0 auto;">
+                                                <div class="text-center text-muted">
+                                                    <i class="bi bi-book display-2 mb-3"></i>
+                                                    <h6 class="fw-medium">@Model.Title</h6>
+                                                    <p class="small">by @Model.Author</p>
+                                                </div>
+                                            </div>
+                                        }
+                                        
+                                        <!-- Warning Badge -->
+                                        <div class="mt-3">
+                                            <span class="badge bg-danger px-3 py-2 rounded-pill fs-6">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>Marked for Deletion
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Details -->
+                            <div class="col-12 col-md-8">
+                                <div class="product-details">
+                                    <!-- Product Header -->
+                                    <div class="product-header mb-4">
+                                        <h2 class="product-title fw-bold mb-2" style="color: #2C3E50; font-family: 'Georgia', serif;">
+                                            @Model.Title
+                                        </h2>
+                                        <p class="text-muted h5 mb-3" style="font-style: italic;">
+                                            <i class="bi bi-pen me-1"></i>by @Model.Author
+                                        </p>
+                                        
+                                        <!-- Category & ISBN -->
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                            @if (Model.Category != null)
+                                            {
+                                                <span class="badge bg-primary px-3 py-2">
+                                                    <i class="bi bi-collection me-1"></i>@Model.Category.Name
+                                                </span>
+                                            }
+                                            <span class="badge bg-secondary px-3 py-2 font-monospace">
+                                                <i class="bi bi-upc me-1"></i>@Model.ISBN
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Product Information Grid -->
+                                    <div class="product-info-grid">
+                                        <div class="row g-3">
+                                            <!-- Description -->
+                                            @if (!string.IsNullOrEmpty(Model.Description))
+                                            {
+                                                <div class="col-12">
+                                                    <div class="info-card p-3 rounded-3" style="background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-left: 4px solid #6c757d;">
+                                                        <h6 class="fw-bold text-secondary mb-2">
+                                                            <i class="bi bi-file-text me-1"></i>Description
+                                                        </h6>
+                                                        <p class="text-muted mb-0">@Model.Description</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                            
+                                            <!-- Pricing Information -->
+                                            <div class="col-12">
+                                                <div class="info-card p-3 rounded-3" style="background: linear-gradient(145deg, #fff3cd, #fef3bd); border-left: 4px solid #ffc107;">
+                                                    <h6 class="fw-bold text-warning mb-3">
+                                                        <i class="bi bi-currency-dollar me-1"></i>Pricing Information
+                                                    </h6>
+                                                    <div class="row g-2">
+                                                        <div class="col-6 col-lg-3">
+                                                            <div class="price-item text-center p-2 rounded" style="background: rgba(255,255,255,0.7);">
+                                                                <small class="text-muted d-block">List Price</small>
+                                                                <strong class="text-secondary">@Model.ListPrice.ToString("C")</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-lg-3">
+                                                            <div class="price-item text-center p-2 rounded" style="background: rgba(255,255,255,0.7);">
+                                                                <small class="text-muted d-block">Regular</small>
+                                                                <strong class="text-success">@Model.Price.ToString("C")</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-lg-3">
+                                                            <div class="price-item text-center p-2 rounded" style="background: rgba(255,255,255,0.7);">
+                                                                <small class="text-muted d-block">50+ Bulk</small>
+                                                                <strong class="text-info">@Model.Price50.ToString("C")</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-lg-3">
+                                                            <div class="price-item text-center p-2 rounded" style="background: rgba(255,255,255,0.7);">
+                                                                <small class="text-muted d-block">100+ Bulk</small>
+                                                                <strong class="text-primary">@Model.Price100.ToString("C")</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Consequences Warning -->
+                <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px; border-left: 5px solid #dc3545 !important;">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-exclamation-diamond-fill text-danger fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading fw-bold mb-2">
+                                <i class="bi bi-shield-exclamation me-1"></i>Important: Deletion Consequences
+                            </h5>
+                            <ul class="mb-0">
+                                <li>This product will be <strong>permanently removed</strong> from your catalog</li>
+                                <li>All associated data, including pricing and descriptions, will be lost</li>
+                                <li>Any existing orders or references may be affected</li>
+                                <li>Product images will also be removed from the system</li>
+                                <li><strong>This action cannot be undone</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-section">
+                    <div class="card border-0 shadow-sm" style="border-radius: 12px; background: linear-gradient(145deg, #ffffff, #f8f9fa);">
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <h5 class="fw-bold text-secondary mb-2">
+                                    <i class="bi bi-question-circle me-1"></i>Are you absolutely sure?
+                                </h5>
+                                <p class="text-muted mb-0">Please confirm that you want to delete "<strong>@Model.Title</strong>" by clicking the delete button below.</p>
+                            </div>
+                            
+                            <form asp-action="Delete" method="post" id="deleteForm" class="d-inline">
+                                <input type="hidden" asp-for="Id" />
+                                <div class="row g-3 justify-content-center">
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <button type="submit" 
+                                                id="confirmDeleteBtn"
+                                                class="btn btn-danger w-100 py-3 fw-bold shadow-lg" 
+                                                style="border-radius: 12px; font-size: 1.1rem;">
+                                            <i class="bi bi-trash3 me-2"></i>
+                                            <span id="deleteButtonText">Yes, Delete Product</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <a asp-action="Index" 
+                                           class="btn btn-secondary w-100 py-3 fw-bold shadow-sm" 
+                                           style="border-radius: 12px; font-size: 1.1rem;">
+                                            <i class="bi bi-arrow-left me-2"></i>Cancel & Go Back
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Alternative Actions Section -->
+<section class="alternative-actions py-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="text-center">
+                    <h5 class="fw-bold text-secondary mb-3">
+                        <i class="bi bi-lightbulb me-1"></i>Consider These Alternatives
+                    </h5>
+                    <p class="text-muted mb-4">Instead of deleting, you might want to consider these options:</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" 
+                               class="btn btn-outline-primary w-100 py-3 shadow-sm" 
+                               style="border-radius: 12px;">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                <div>
+                                    <div class="fw-bold">Edit Product Instead</div>
+                                    <small class="opacity-75">Modify product details</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <a asp-action="Details" asp-route-id="@Model.Id" 
+                               class="btn btn-outline-info w-100 py-3 shadow-sm" 
+                               style="border-radius: 12px;">
+                                <i class="bi bi-eye me-2"></i>
+                                <div>
+                                    <div class="fw-bold">View Full Details</div>
+                                    <small class="opacity-75">Review complete information</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDeleteConfirmation();
+            initializeDoubleConfirmation();
+            initializeAnimations();
+        });
+
+        function initializeDeleteConfirmation() {
+            const deleteForm = document.getElementById('deleteForm');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const deleteButtonText = document.getElementById('deleteButtonText');
+
+            if (deleteForm && confirmDeleteBtn) {
+                deleteForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // First confirmation
+                    const firstConfirm = confirm(
+                        `⚠️ FINAL WARNING ⚠️\n\n` +
+                        `You are about to permanently delete:\n` +
+                        `"@Model.Title" by @Model.Author\n\n` +
+                        `This action cannot be undone!\n\n` +
+                        `Are you absolutely sure you want to proceed?`
+                    );
+                    
+                    if (firstConfirm) {
+                        // Second confirmation for extra safety
+                        const secondConfirm = confirm(
+                            `🚨 LAST CHANCE 🚨\n\n` +
+                            `This is your final opportunity to cancel.\n\n` +
+                            `Click OK to permanently delete "@Model.Title"\n` +
+                            `Click Cancel to keep the product safe.`
+                        );
+                        
+                        if (secondConfirm) {
+                            // Show loading state
+                            confirmDeleteBtn.disabled = true;
+                            deleteButtonText.innerHTML = '<i class="spinner-border spinner-border-sm me-2" role="status"></i>Deleting...';
+                            confirmDeleteBtn.classList.remove('btn-danger');
+                            confirmDeleteBtn.classList.add('btn-warning');
+                            
+                            // Submit the form after a brief delay
+                            setTimeout(() => {
+                                deleteForm.submit();
+                            }, 500);
+                        }
+                    }
+                });
+            }
+        }
+
+        function initializeDoubleConfirmation() {
+            // Add enhanced hover effects for the delete button
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 8px 25px rgba(220, 53, 69, 0.4)';
+                });
+
+                confirmDeleteBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '';
+                });
+            }
+        }
+
+        function initializeAnimations() {
+            // Entrance animations
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const animateElements = document.querySelectorAll('.card, .alert, .action-section');
+                animateElements.forEach((element, index) => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    element.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                    observer.observe(element);
+                });
+            }
+
+            // Product image hover effect
+            const productImage = document.querySelector('.product-image-container img, .product-placeholder');
+            if (productImage) {
+                productImage.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.filter = 'grayscale(0%) brightness(0.9)';
+                });
+
+                productImage.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.filter = 'grayscale(20%)';
+                });
+            }
+
+            // Warning pulse animation for the warning badge
+            const warningBadge = document.querySelector('.badge.bg-danger');
+            if (warningBadge) {
+                setInterval(() => {
+                    warningBadge.style.animation = 'none';
+                    setTimeout(() => {
+                        warningBadge.style.animation = 'pulse 1s ease-in-out';
+                    }, 10);
+                }, 3000);
+            }
+        }
+
+        // Enhanced mobile interactions
+        if ('ontouchstart' in window) {
+            const interactiveElements = document.querySelectorAll('.btn, .info-card');
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                element.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Escape key goes back to index
+                window.location.href = '@Url.Action("Index")';
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Delete Page Specific Styling */
+    .product-title {
+        font-family: 'Georgia', serif;
+        letter-spacing: -0.5px;
+    }
+
+    .info-card {
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .price-item {
+        transition: all 0.3s ease;
+    }
+
+    .price-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Custom pulse animation */
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Enhanced button styling */
+    .btn {
+        transition: all 0.3s ease;
+        border-width: 2px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .product-image-container img,
+        .product-placeholder {
+            max-width: 200px !important;
+            max-height: 240px !important;
+        }
+        
+        .product-title {
+            font-size: 1.5rem !important;
+        }
+        
+        .btn {
+            font-size: 0.95rem !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .product-image-container img,
+        .product-placeholder {
+            max-width: 180px !important;
+            max-height: 200px !important;
+        }
+        
+        .product-title {
+            font-size: 1.25rem !important;
+        }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #dc3545, #c82333);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #c82333, #b21f2d);
+    }
+
+    /* Focus states for accessibility */
+    .btn:focus {
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+</style>

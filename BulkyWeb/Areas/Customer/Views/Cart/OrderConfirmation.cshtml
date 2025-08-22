@@ -1,0 +1,572 @@
+@model Bulky.Models.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Order Confirmation - BulkyWeb";
+    
+    // Get order details
+    var orderHeader = Model.OrderHeader;
+    var orderDetails = Model.OrderDetails;
+}
+
+<!-- Order Confirmation Hero Section -->
+<section class="confirmation-hero py-4 py-md-5" style="background: linear-gradient(135deg, @(Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved ? "#27AE60 0%, #2ECC71 50%, #58D68D" : "#3498DB 0%, #5DADE2 50%, #85C1E9") 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%23ffffff\">??</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%23ffffff\">??</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Status Message -->
+                <div class="text-center mb-4">
+                    <div class="status-icon mb-4">
+                        @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved)
+                        {
+                            <i class="bi bi-check-circle-fill text-white" style="font-size: 4rem;"></i>
+                        }
+                        else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                        {
+                            <i class="bi bi-clock-fill text-white" style="font-size: 4rem;"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-info-circle-fill text-white" style="font-size: 4rem;"></i>
+                        }
+                    </div>
+                    
+                    @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved)
+                    {
+                        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: 'Georgia', serif;">
+                            Order Confirmed!
+                        </h1>
+                        <p class="lead text-white opacity-75">Thank you for your payment. Your books are being prepared for shipment.</p>
+                    }
+                    else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                    {
+                        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: 'Georgia', serif;">
+                            Order Placed!
+                        </h1>
+                        <p class="lead text-white opacity-75">Your order has been placed. Complete payment to confirm and process your order.</p>
+                    }
+                    else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusDelayedForApproval)
+                    {
+                        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: 'Georgia', serif;">
+                            Order Received!
+                        </h1>
+                        <p class="lead text-white opacity-75">Your order has been received. Payment will be processed according to your company terms.</p>
+                    }
+                    
+                    <div class="decorative-line mx-auto" style="width: 100px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 3px;"></div>
+                </div>
+
+                <!-- Order Number Card -->
+                <div class="order-number-card mx-auto" style="max-width: 500px;">
+                    <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                        <div class="card-body text-center p-4">
+                            <h5 class="text-primary fw-bold mb-2">Order Number</h5>
+                            <h3 class="text-success fw-bold mb-2">#@Model.OrderHeader.Id.ToString("D6")</h3>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar me-1"></i>
+                                Placed on @(Model.OrderHeader?.OrderDate.ToString("MMMM dd, yyyy 'at' h:mm tt") ?? "Unknown Date")
+                            </p>
+                            
+                            <!-- Payment Status Alert -->
+                            @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                            {
+                                <div class="alert alert-warning border-0 mt-3 mb-0" style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107 !important;">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                            <strong>Payment Required</strong>
+                                        </div>
+                                        <a asp-area="Customer" asp-controller="Order" asp-action="PayNow" asp-route-id="@Model.OrderHeader.Id" 
+                                           class="btn btn-warning btn-sm">
+                                            <i class="bi bi-credit-card me-1"></i>Pay Now
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusDelayedForApproval)
+                            {
+                                <div class="alert alert-info border-0 mt-3 mb-0" style="background: rgba(13, 202, 240, 0.1); border-left: 4px solid #0dcaf0 !important;">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            <strong>Payment can be completed later</strong>
+                                        </div>
+                                        <a asp-area="Customer" asp-controller="Order" asp-action="Index" 
+                                           class="btn btn-info btn-sm">
+                                            <i class="bi bi-list me-1"></i>My Orders
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Details Section -->
+<section class="order-details py-4 py-md-5">
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+            <!-- Order Items -->
+            <div class="col-12 col-lg-8">
+                <!-- Order Items Card -->
+                <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                    <div class="card-header text-white py-4" 
+                         style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #4A6741, #578553);">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-bag-check me-2"></i>Your Order (@(Model.OrderDetails?.Count() ?? 0) items)
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Items List -->
+                        <div class="items-list">
+                            @if (Model.OrderDetails != null)
+                            {
+                                @foreach (var item in Model.OrderDetails)
+                                {
+                                    <div class="order-item p-3 p-md-4 border-bottom" data-item-id="@item.ProductId">
+                                        <div class="row align-items-center g-3">
+                                            <!-- Product Info -->
+                                            <div class="col-12 col-md-8">
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Product Image -->
+                                                    <div class="product-image me-3 flex-shrink-0">
+                                                        @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                                                        {
+                                                            <img src="@item.Product.ImageUrl" alt="@item.Product.Title" 
+                                                                 class="img-fluid rounded-3 shadow-sm" 
+                                                                 style="width: 70px; height: 90px; object-fit: cover;" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="book-placeholder d-flex align-items-center justify-content-center rounded-3 shadow-sm" 
+                                                                 style="width: 70px; height: 90px; background: linear-gradient(145deg, #8B4513, #A0522D);">
+                                                                <i class="bi bi-book text-white fs-5"></i>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    
+                                                    <!-- Product Details -->
+                                                    <div class="product-details flex-grow-1">
+                                                        <h6 class="product-title fw-bold mb-2 text-primary" style="font-family: 'Georgia', serif;">
+                                                            @item.Product?.Title
+                                                        </h6>
+                                                        <p class="product-author text-muted mb-2 small">
+                                                            <i class="bi bi-pen me-1"></i>by @item.Product?.Author
+                                                        </p>
+                                                        <div class="quantity-price">
+                                                            <span class="badge bg-info px-3 py-2">
+                                                                <i class="bi bi-x me-1"></i>@item.Count
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Price Info -->
+                                            <div class="col-12 col-md-4 text-md-end">
+                                                <div class="price-info">
+                                                    <div class="fw-bold text-success fs-6">@item.Price.ToString("C") each</div>
+                                                    <div class="fw-bold text-primary fs-5">@((item.Price * item.Count).ToString("C")) total</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                    <div class="card-header text-white py-4" 
+                         style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #3498DB, #5DADE2);">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-truck me-2"></i>Shipping Information
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="shipping-details">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="shipping-to">
+                                        <h6 class="fw-bold text-primary mb-3">Shipping To:</h6>
+                                        <div class="address">
+                                            <div class="fw-bold">@Model.OrderHeader?.Name</div>
+                                            <div>@Model.OrderHeader?.StreetAddress</div>
+                                            <div>@Model.OrderHeader?.City, @Model.OrderHeader?.State @Model.OrderHeader?.PostalCode</div>
+                                            <div class="mt-2">
+                                                <i class="bi bi-telephone me-1"></i>@Model.OrderHeader?.PhoneNumber
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="shipping-method">
+                                        <h6 class="fw-bold text-primary mb-3">Shipping Method:</h6>
+                                        <div class="method-info">
+                                            <div class="fw-bold text-success">
+                                                <i class="bi bi-truck me-2"></i>FREE Standard Shipping
+                                            </div>
+                                            <div class="text-muted small">5-7 business days</div>
+                                            <div class="mt-2 text-info">
+                                                <i class="bi bi-info-circle me-1"></i>You'll receive tracking information via email
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-12 col-lg-4">
+                <div class="order-summary-section">
+                    <!-- Order Total Card -->
+                    <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                        <div class="card-header text-white py-4" 
+                             style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #F39C12, #E67E22);">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-receipt me-2"></i>Order Summary
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="summary-details">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Items:</span>
+                                    <span class="fw-medium">@(Model.OrderDetails?.Sum(x => x.Count) ?? 0) books</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Subtotal:</span>
+                                    <span class="fw-medium">@(Model.OrderHeader?.OrderTotal.ToString("C") ?? "$0.00")</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Shipping:</span>
+                                    <span class="text-success fw-medium">FREE</span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Tax:</span>
+                                    <span class="fw-medium">$0.00</span>
+                                </div>
+                                
+                                <hr class="my-3">
+                                
+                                <div class="d-flex justify-content-between mb-4">
+                                    <span class="h6 fw-bold">
+                                        @(Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved ? "Total Paid:" : "Order Total:")
+                                    </span>
+                                    <span class="h5 fw-bold @(Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved ? "text-success" : "text-primary")">
+                                        @(Model.OrderHeader?.OrderTotal.ToString("C") ?? "$0.00")
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Order Status -->
+                            <div class="order-status mb-4">
+                                <div class="status-badge text-center p-3 rounded-3" 
+                                     style="background: linear-gradient(145deg, @(Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved ? "rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.1)" : "rgba(52, 152, 219, 0.1), rgba(93, 173, 226, 0.1)"));">
+                                    <div class="status-icon mb-2">
+                                        @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved)
+                                        {
+                                            <i class="bi bi-check-circle-fill text-success fs-3"></i>
+                                        }
+                                        else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                                        {
+                                            <i class="bi bi-clock-fill text-warning fs-3"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-info-circle-fill text-info fs-3"></i>
+                                        }
+                                    </div>
+                                    <div class="status-text">
+                                        <div class="fw-bold @(Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved ? "text-success" : Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending ? "text-warning" : "text-info")">
+                                            @(Model.OrderHeader?.OrderStatus ?? "Unknown")
+                                        </div>
+                                        <small class="text-muted">Payment: @(Model.OrderHeader?.PaymentStatus ?? "Unknown")</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons d-grid gap-3">
+                                @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                                {
+                                    <a asp-area="Customer" asp-controller="Order" asp-action="PayNow" asp-route-id="@Model.OrderHeader.Id" 
+                                       class="btn btn-success btn-lg fw-medium" 
+                                       style="border-radius: 12px;">
+                                        <i class="bi bi-credit-card me-2"></i>Complete Payment
+                                    </a>
+                                }
+                                
+                                <a asp-area="Customer" asp-controller="Order" asp-action="Index" 
+                                   class="btn btn-primary btn-lg fw-medium" 
+                                   style="border-radius: 12px;">
+                                    <i class="bi bi-list me-2"></i>View All Orders
+                                </a>
+                                
+                                <a asp-area="Customer" asp-controller="Home" asp-action="Index" 
+                                   class="btn btn-outline-secondary fw-medium" 
+                                   style="border-radius: 12px;">
+                                    <i class="bi bi-house-door me-2"></i>Continue Shopping
+                                </a>
+                                
+                                <button class="btn btn-outline-secondary fw-medium" onclick="printOrder()"
+                                        style="border-radius: 12px;">
+                                    <i class="bi bi-printer me-2"></i>Print Order Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- What's Next Card -->
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3 text-primary">
+                                <i class="bi bi-clock me-2"></i>What's Next?
+                            </h6>
+                            <div class="next-steps">
+                                @if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusApproved)
+                                {
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">?</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Payment Confirmed</div>
+                                            <small class="text-muted">Your payment has been processed successfully</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">2</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Processing</div>
+                                            <small class="text-muted">We'll prepare your books for shipping</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start">
+                                        <div class="step-number bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">3</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Shipping</div>
+                                            <small class="text-muted">Tracking info will be sent to your email</small>
+                                        </div>
+                                    </div>
+                                }
+                                else if (Model.OrderHeader?.PaymentStatus == Bulky.Utility.SD.PaymentStatusPending)
+                                {
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">1</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Complete Payment</div>
+                                            <small class="text-muted">Click "Complete Payment" to proceed</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">2</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Processing</div>
+                                            <small class="text-muted">After payment, we'll prepare your books</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start">
+                                        <div class="step-number bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">3</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Shipping</div>
+                                            <small class="text-muted">Tracking info will be sent after processing</small>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">1</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Order Received</div>
+                                            <small class="text-muted">Your order has been received successfully</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start mb-3">
+                                        <div class="step-number bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">2</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Payment Processing</div>
+                                            <small class="text-muted">Payment will be processed per company terms</small>
+                                        </div>
+                                    </div>
+                                    <div class="step d-flex align-items-start">
+                                        <div class="step-number bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                             style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: bold;">3</div>
+                                        <div class="step-content">
+                                            <div class="fw-medium">Order Fulfillment</div>
+                                            <small class="text-muted">Processing and shipping after payment</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Success animation
+            animateSuccessIcon();
+            
+            // Auto-scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function animateSuccessIcon() {
+            const successIcon = document.querySelector('.success-icon i');
+            if (successIcon) {
+                successIcon.style.transform = 'scale(0)';
+                successIcon.style.transition = 'transform 0.5s ease-out';
+                
+                setTimeout(() => {
+                    successIcon.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        function printOrder() {
+            window.print();
+        }
+
+        // Confetti effect (optional)
+        function createConfetti() {
+            const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.borderRadius = '50%';
+                
+                document.body.appendChild(confetti);
+                
+                const fallDuration = Math.random() * 3000 + 2000;
+                confetti.animate([
+                    { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 20}px) rotate(360deg)`, opacity: 0 }
+                ], {
+                    duration: fallDuration,
+                    easing: 'linear'
+                }).onfinish = () => {
+                    confetti.remove();
+                };
+            }
+        }
+
+        // Trigger confetti on page load
+        setTimeout(createConfetti, 500);
+    </script>
+}
+
+<style>
+    /* Order Confirmation Styling */
+    .confirmation-hero {
+        min-height: 40vh;
+    }
+
+    .success-icon {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .order-number-card {
+        animation: slideUp 0.6s ease-out;
+    }
+
+    .order-item {
+        transition: all 0.3s ease;
+    }
+
+    .order-item:hover {
+        background-color: rgba(75, 113, 71, 0.02);
+    }
+
+    .step {
+        transition: all 0.2s ease;
+    }
+
+    .step:hover {
+        transform: translateX(5px);
+    }
+
+    /* Animations */
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Print Styles */
+    @@media print {
+        .action-buttons,
+        .next-steps {
+            display: none !important;
+        }
+        
+        .card {
+            border: 1px solid #dee2e6 !important;
+            box-shadow: none !important;
+        }
+        
+        .confirmation-hero {
+            background: none !important;
+            color: black !important;
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .confirmation-hero {
+            min-height: 30vh;
+        }
+        
+        .success-icon i {
+            font-size: 3rem !important;
+        }
+        
+        .display-5 {
+            font-size: 1.8rem !important;
+        }
+    }
+</style>

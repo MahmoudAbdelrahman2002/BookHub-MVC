@@ -1,0 +1,710 @@
+@{
+    ViewData["Title"] = "User Management - BulkyWeb";
+}
+
+<!-- User Management Hero Section -->
+<section class="user-management-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%23dc3545\">??</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%23dc3545\">??</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white p-3 rounded-3 shadow-sm border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-house me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="text-muted">Admin</span>
+                        </li>
+                        <li class="breadcrumb-item active text-danger fw-medium" aria-current="page">
+                            User Management
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <h1 class="display-5 fw-bold text-danger mb-3" style="font-family: 'Georgia', serif;">
+                            <i class="bi bi-people-fill me-3"></i>User Management
+                        </h1>
+                        <p class="lead text-muted mb-4">
+                            Manage user accounts, roles, and permissions for the BulkyWeb platform
+                        </p>
+                    </div>
+                    <div class="col-12 col-lg-4 text-lg-end">
+                        <div class="admin-badge-container">
+                            <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-shield-exclamation me-1"></i>
+                                Admin Only Access
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main User Management Section -->
+<section class="user-management-content py-4 py-md-5">
+    <div class="container">
+        <!-- Action Bar -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8f9fa);">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-lg-6">
+                                <h5 class="card-title mb-2 text-primary fw-bold">
+                                    <i class="bi bi-gear-fill me-2"></i>User Administration
+                                </h5>
+                                <p class="text-muted mb-0">Create, manage, and control user access to the system</p>
+                            </div>
+                            <div class="col-12 col-lg-6 text-lg-end mt-3 mt-lg-0">
+                                <a asp-action="Create" class="btn btn-success btn-lg shadow-lg" style="border-radius: 12px;">
+                                    <i class="bi bi-person-plus-fill me-2"></i>
+                                    Create New User
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card card border-0 shadow-sm h-100" style="border-radius: 15px; background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+                    <div class="card-body p-4 text-white text-center">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-people display-4"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="totalUsers">-</h3>
+                        <p class="mb-0 opacity-90">Total Users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card card border-0 shadow-sm h-100" style="border-radius: 15px; background: linear-gradient(135deg, #198754, #146c43);">
+                    <div class="card-body p-4 text-white text-center">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-person-check display-4"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="activeUsers">-</h3>
+                        <p class="mb-0 opacity-90">Active Users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card card border-0 shadow-sm h-100" style="border-radius: 15px; background: linear-gradient(135deg, #ffc107, #e0a800);">
+                    <div class="card-body p-4 text-white text-center">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-shield-check display-4"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="adminUsers">-</h3>
+                        <p class="mb-0 opacity-90">Admin Users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card card border-0 shadow-sm h-100" style="border-radius: 15px; background: linear-gradient(135deg, #dc3545, #b02a37);">
+                    <div class="card-body p-4 text-white text-center">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-person-x display-4"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="lockedUsers">-</h3>
+                        <p class="mb-0 opacity-90">Locked Users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                    <!-- Card Header -->
+                    <div class="card-header bg-primary text-white py-4" style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-6">
+                                <h3 class="card-title mb-0 fw-bold">
+                                    <i class="bi bi-table me-2"></i>User Directory
+                                </h3>
+                                <p class="mb-0 opacity-90">Complete list of system users and their roles</p>
+                            </div>
+                            <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                                    <button class="btn btn-light btn-sm" onclick="refreshTable()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                                    </button>
+                                    <button class="btn btn-outline-light btn-sm" onclick="exportUsers()">
+                                        <i class="bi bi-download me-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table id="tblData" class="table table-hover mb-0" style="border-radius: 0 0 15px 15px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="py-3 ps-4 fw-bold text-primary">
+                                            <i class="bi bi-person me-1"></i>Name
+                                        </th>
+                                        <th class="py-3 fw-bold text-primary">
+                                            <i class="bi bi-envelope me-1"></i>Email
+                                        </th>
+                                        <th class="py-3 fw-bold text-primary">
+                                            <i class="bi bi-telephone me-1"></i>Phone
+                                        </th>
+                                        <th class="py-3 fw-bold text-primary">
+                                            <i class="bi bi-building me-1"></i>Company
+                                        </th>
+                                        <th class="py-3 fw-bold text-primary">
+                                            <i class="bi bi-person-badge me-1"></i>Role
+                                        </th>
+                                        <th class="py-3 pe-4 fw-bold text-primary text-center">
+                                            <i class="bi bi-gear me-1"></i>Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    <!-- Data will be populated by DataTables -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-0 bg-light" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <h5 class="text-info fw-bold mb-3">
+                            <i class="bi bi-question-circle me-2"></i>User Management Guide
+                        </h5>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Create Users:</strong> Add new users with specific roles
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Manage Roles:</strong> Change user roles and permissions
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Lock/Unlock:</strong> Control user access to the system
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-shield-check text-warning me-2"></i>
+                                        <strong>Security:</strong> All actions are logged for audit
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-shield-check text-warning me-2"></i>
+                                        <strong>Validation:</strong> Email uniqueness is enforced
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-shield-check text-warning me-2"></i>
+                                        <strong>Company Users:</strong> Must be assigned to a company
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        var dataTable;
+        
+        $(document).ready(function () {
+            loadDataTable();
+            loadStatistics();
+            initializeAnimations();
+        });
+
+        function loadDataTable() {
+            dataTable = $('#tblData').DataTable({
+                "ajax": { 
+                    url: '/admin/user/getall',
+                    dataSrc: function(json) {
+                        if (json.error) {
+                            console.error('Error loading data:', json.error);
+                            showNotification('Failed to load user data', 'error');
+                            return [];
+                        }
+                        return json.data;
+                    }
+                },
+                "columns": [
+                    { 
+                        data: 'name', 
+                        "width": "20%",
+                        render: function (data, type, row) {
+                            return `
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar me-3">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                                             style="width: 40px; height: 40px; font-weight: bold;">
+                                            ${data.charAt(0).toUpperCase()}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="fw-medium text-dark">${data}</div>
+                                        <small class="text-muted">ID: ${row.id.substring(0, 8)}...</small>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    },
+                    { 
+                        data: 'email', 
+                        "width": "20%",
+                        render: function (data) {
+                            return `<a href="mailto:${data}" class="text-decoration-none">${data}</a>`;
+                        }
+                    },
+                    { 
+                        data: 'phoneNumber', 
+                        "width": "15%",
+                        render: function (data) {
+                            if (data === 'N/A') {
+                                return '<span class="text-muted">Not provided</span>';
+                            }
+                            return `<a href="tel:${data}" class="text-decoration-none">${data}</a>`;
+                        }
+                    },
+                    { 
+                        data: 'company', 
+                        "width": "15%",
+                        render: function (data) {
+                            if (data === 'N/A') {
+                                return '<span class="text-muted">Individual</span>';
+                            }
+                            return `<span class="badge bg-info text-dark">${data}</span>`;
+                        }
+                    },
+                    { 
+                        data: 'role', 
+                        "width": "15%",
+                        render: function (data) {
+                            let badgeClass = 'bg-secondary';
+                            let icon = 'bi-person';
+                            
+                            switch(data) {
+                                case 'Admin':
+                                    badgeClass = 'bg-danger';
+                                    icon = 'bi-shield-check';
+                                    break;
+                                case 'Employee':
+                                    badgeClass = 'bg-warning text-dark';
+                                    icon = 'bi-briefcase';
+                                    break;
+                                case 'Company':
+                                    badgeClass = 'bg-info text-dark';
+                                    icon = 'bi-building';
+                                    break;
+                                case 'Customer':
+                                    badgeClass = 'bg-success';
+                                    icon = 'bi-person';
+                                    break;
+                            }
+                            
+                            return `<span class="badge ${badgeClass}"><i class="${icon} me-1"></i>${data}</span>`;
+                        }
+                    },
+                    {
+                        data: { id: "id", lockoutEnd: "lockoutEnd", role: "role" },
+                        "render": function (data) {
+                            let today = new Date().getTime();
+                            let lockout = new Date(data.lockoutEnd).getTime();
+                            let isLocked = lockout > today;
+                            
+                            let lockButton = isLocked ? 
+                                `<button onclick="LockUnlock('${data.id}')" class="btn btn-success btn-sm me-1" title="Unlock User">
+                                    <i class="bi bi-unlock"></i>
+                                </button>` :
+                                `<button onclick="LockUnlock('${data.id}')" class="btn btn-warning btn-sm me-1" title="Lock User">
+                                    <i class="bi bi-lock"></i>
+                                </button>`;
+                            
+                            return `
+                                <div class="text-center">
+                                    ${lockButton}
+                                    <a href="/Admin/User/RoleManagement?userId=${data.id}" class="btn btn-primary btn-sm" title="Edit Role">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                            `;
+                        },
+                        "width": "15%"
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No users found in the system"
+                },
+                "responsive": true,
+                "pageLength": 10,
+                "order": [[0, 'asc']],
+                "drawCallback": function() {
+                    // Add hover effects to rows
+                    $('#tblData tbody tr').hover(
+                        function() { $(this).addClass('table-primary'); },
+                        function() { $(this).removeClass('table-primary'); }
+                    );
+                }
+            });
+        }
+
+        function LockUnlock(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This will change the user\'s access status.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Admin/User/LockUnlock',
+                        data: JSON.stringify(id),
+                        contentType: "application/json",
+                        success: function (data) {
+                            if (data.success) {
+                                showNotification(data.message, 'success');
+                                dataTable.ajax.reload();
+                                loadStatistics(); // Reload stats
+                            } else {
+                                showNotification(data.message, 'error');
+                            }
+                        },
+                        error: function () {
+                            showNotification('Error occurred while updating user status', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function loadStatistics() {
+            $.ajax({
+                url: '/admin/user/getall',
+                success: function(data) {
+                    if (data.data) {
+                        const users = data.data;
+                        const totalUsers = users.length;
+                        const activeUsers = users.filter(u => !u.lockoutEnd || new Date(u.lockoutEnd) <= new Date()).length;
+                        const adminUsers = users.filter(u => u.role === 'Admin').length;
+                        const lockedUsers = users.filter(u => u.lockoutEnd && new Date(u.lockoutEnd) > new Date()).length;
+                        
+                        // Animate counters
+                        animateCounter('totalUsers', totalUsers);
+                        animateCounter('activeUsers', activeUsers);
+                        animateCounter('adminUsers', adminUsers);
+                        animateCounter('lockedUsers', lockedUsers);
+                    }
+                },
+                error: function() {
+                    console.error('Failed to load statistics');
+                }
+            });
+        }
+
+        function animateCounter(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 1500;
+            const step = targetValue / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= targetValue) {
+                    current = targetValue;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 16);
+        }
+
+        function refreshTable() {
+            showNotification('Refreshing user data...', 'info');
+            dataTable.ajax.reload();
+            loadStatistics();
+        }
+
+        function exportUsers() {
+            showNotification('Export functionality coming soon...', 'info');
+        }
+
+        function initializeAnimations() {
+            // Entrance animations for cards
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const animateElements = document.querySelectorAll('.card, .stat-card');
+                animateElements.forEach((element, index) => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    element.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                    observer.observe(element);
+                });
+            }
+
+            // Stat card hover effects
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        }
+
+        function showNotification(message, type) {
+            const iconMap = {
+                'success': 'success',
+                'error': 'error',
+                'warning': 'warning',
+                'info': 'info'
+            };
+
+            Swal.fire({
+                title: message,
+                icon: iconMap[type] || 'info',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        }
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    
+    <style>
+        /* User Management Specific Styling */
+        .user-management-hero {
+            min-height: 40vh;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            opacity: 0.9;
+        }
+
+        /* DataTable Enhancements */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            margin: 1rem;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.5rem 1rem;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* Table styling */
+        #tblData {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        #tblData thead th {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        #tblData tbody td {
+            border-left: none;
+            border-right: none;
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
+        }
+
+        #tblData tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        #tblData tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05) !important;
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* User avatar styling */
+        .user-avatar .rounded-circle {
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar .rounded-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Button styling */
+        .btn-sm {
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Badge enhancements */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+        }
+
+        /* Admin badge animation */
+        .admin-badge-container .badge {
+            animation: gentle-pulse 3s ease-in-out infinite;
+        }
+
+        @@keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .user-management-hero {
+                min-height: 30vh;
+                padding: 2rem 0 !important;
+            }
+            
+            .display-5 {
+                font-size: 2rem !important;
+            }
+            
+            .stat-card .display-4 {
+                font-size: 2rem !important;
+            }
+
+            .card-body {
+                padding: 1.5rem !important;
+            }
+
+            #tblData {
+                font-size: 0.85rem;
+            }
+
+            .user-avatar .rounded-circle {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 0.8rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .display-5 {
+                font-size: 1.75rem !important;
+            }
+            
+            .btn-lg {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+            }
+        }
+
+        /* Loading animation */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* Swal2 customizations */
+        .swal2-popup {
+            border-radius: 15px;
+        }
+
+        /* Enhanced pagination */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+            border-color: #0d6efd !important;
+            color: white !important;
+        }
+    </style>
+}

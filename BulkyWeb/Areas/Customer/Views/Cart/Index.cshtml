@@ -1,0 +1,765 @@
+﻿@model Bulky.Models.ViewModels.ShoppingCartViewModel
+
+@{
+    ViewData["Title"] = "Shopping Cart - BulkyWeb";
+}
+
+<!-- Shopping Cart Hero Section -->
+<section class="cart-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%234b7147\">🛒</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%234b7147\">📚</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white p-3 rounded-3 shadow-sm border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-house-door me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-success fw-medium" aria-current="page">
+                            <i class="bi bi-cart me-1"></i>Shopping Cart
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold text-primary mb-3" style="font-family: 'Georgia', serif;">
+                        <i class="bi bi-cart-check me-3"></i>Your Shopping Cart
+                    </h1>
+                    <p class="lead text-muted">Review your selected books and proceed to checkout</p>
+                    <div class="decorative-line mx-auto" style="width: 80px; height: 3px; background: linear-gradient(to right, #4b7147, #578553); border-radius: 3px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Shopping Cart Section -->
+<section class="cart-main py-4 py-md-5">
+    <div class="container">
+        @if (Model.ShoppingCartList.Any())
+        {
+            <div class="row g-4 g-lg-5">
+                <!-- Cart Items -->
+                <div class="col-12 col-xl-8">
+                    <div class="cart-items-section">
+                        <!-- Cart Items Header -->
+                        <div class="cart-header mb-4">
+                            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: linear-gradient(135deg, #4b7147, #578553);">
+                                <div class="card-body py-3">
+                                    <div class="row align-items-center text-white">
+                                        <div class="col-6 col-md-4">
+                                            <h6 class="mb-0 fw-bold">
+                                                <i class="bi bi-list-ul me-2"></i>Items (@Model.ShoppingCartList.Count())
+                                            </h6>
+                                        </div>
+                                        <div class="col-3 col-md-2 text-center d-none d-md-block">
+                                            <h6 class="mb-0 fw-bold">Price</h6>
+                                        </div>
+                                        <div class="col-3 col-md-2 text-center d-none d-md-block">
+                                            <h6 class="mb-0 fw-bold">Quantity</h6>
+                                        </div>
+                                        <div class="col-3 col-md-2 text-center d-none d-md-block">
+                                            <h6 class="mb-0 fw-bold">Subtotal</h6>
+                                        </div>
+                                        <div class="col-6 col-md-2 text-end">
+                                            <h6 class="mb-0 fw-bold">Actions</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cart Items List -->
+                        <div class="cart-items-list">
+                            @foreach (var item in Model.ShoppingCartList)
+                            {
+                                decimal itemPrice = 0;
+                                // Calculate price based on quantity (bulk pricing)
+                                if (item.Count >= 100)
+                                {
+                                    itemPrice = (decimal)item.Product.Price100;
+                                }
+                                else if (item.Count >= 50)
+                                {
+                                    itemPrice = (decimal)item.Product.Price50;
+                                }
+                                else
+                                {
+                                    itemPrice = (decimal)item.Product.Price;
+                                }
+                                
+                                decimal itemTotal = itemPrice * item.Count;
+
+                                <div class="cart-item mb-3" data-item-id="@item.Id">
+                                    <div class="card border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;">
+                                        <div class="card-body p-3 p-md-4">
+                                            <div class="row align-items-center g-3">
+                                                <!-- Product Image & Info -->
+                                                <div class="col-12 col-md-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- Product Image -->
+                                                        <div class="product-image me-3 flex-shrink-0">
+                                                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                                            {
+                                                                <img src="@item.Product.ImageUrl" alt="@item.Product.Title" 
+                                                                     class="img-fluid rounded-3 shadow-sm" 
+                                                                     style="width: 80px; height: 100px; object-fit: cover;" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="book-placeholder d-flex align-items-center justify-content-center rounded-3 shadow-sm" 
+                                                                     style="width: 80px; height: 100px; background: linear-gradient(145deg, #8B4513, #A0522D);">
+                                                                    <i class="bi bi-book text-white fs-4"></i>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        
+                                                        <!-- Product Details -->
+                                                        <div class="product-details flex-grow-1">
+                                                            <h6 class="product-title fw-bold mb-2 text-primary" style="font-family: 'Georgia', serif;">
+                                                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Product.Id" 
+                                                                   class="text-decoration-none text-primary">
+                                                                    @item.Product.Title
+                                                                </a>
+                                                            </h6>
+                                                            <p class="product-author text-muted mb-2 small">
+                                                                <i class="bi bi-pen me-1"></i>by @item.Product.Author
+                                                            </p>
+                                                            @if (item.Product.Category != null)
+                                                            {
+                                                                <span class="badge bg-secondary bg-gradient small">
+                                                                    <i class="bi bi-collection me-1"></i>@item.Product.Category.Name
+                                                                </span>
+                                                            }
+                                                            
+                                                            <!-- Mobile Price Display -->
+                                                            <div class="d-md-none mt-3">
+                                                                <div class="row g-2">
+                                                                    <div class="col-6">
+                                                                        <small class="text-muted">Unit Price:</small>
+                                                                        <div class="fw-bold text-success">@itemPrice.ToString("C")</div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <small class="text-muted">Subtotal:</small>
+                                                                        <div class="fw-bold text-primary">@itemTotal.ToString("C")</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Desktop Price Display -->
+                                                <div class="col-md-2 text-center d-none d-md-block">
+                                                    <div class="price-display">
+                                                        <div class="fw-bold text-success fs-6">@itemPrice.ToString("C")</div>
+                                                        @if (item.Count >= 50)
+                                                        {
+                                                            <small class="text-warning">
+                                                                <i class="bi bi-star-fill me-1"></i>Bulk Price
+                                                            </small>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quantity Controls -->
+                                                <div class="col-12 col-md-2">
+                                                    <div class="quantity-controls d-flex align-items-center justify-content-center">
+                                                        <a asp-action="Minus" asp-route-cartId="@item.Id" 
+                                                           class="btn btn-outline-danger btn-sm" 
+                                                           style="border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
+                                                           title="Decrease quantity">
+                                                            <i class="bi bi-dash fw-bold"></i>
+                                                        </a>
+                                                        
+                                                        <span class="quantity-display mx-3 fw-bold text-primary fs-5">@item.Count</span>
+                                                        
+                                                        <a asp-action="Plus" asp-route-cartId="@item.Id" 
+                                                           class="btn btn-outline-success btn-sm" 
+                                                           style="border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"
+                                                           title="Increase quantity">
+                                                            <i class="bi bi-plus fw-bold"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Desktop Subtotal -->
+                                                <div class="col-md-2 text-center d-none d-md-block">
+                                                    <div class="subtotal-display">
+                                                        <div class="fw-bold text-primary fs-5">@itemTotal.ToString("C")</div>
+                                                        @if (item.Count >= 50)
+                                                        {
+                                                            decimal regularTotal = (decimal)item.Product.Price * item.Count;
+                                                            decimal savings = regularTotal - itemTotal;
+                                                            if (savings > 0)
+                                                            {
+                                                                <small class="text-success">
+                                                                    <i class="bi bi-piggy-bank me-1"></i>Save @savings.ToString("C")
+                                                                </small>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <!-- Actions -->
+                                                <div class="col-12 col-md-2">
+                                                    <div class="item-actions d-flex flex-column gap-2">
+                                                        <a asp-action="Remove" asp-route-cartId="@item.Id" 
+                                                           class="btn btn-outline-danger btn-sm fw-medium"
+                                                           onclick="return confirm('Remove this item from your cart?')"
+                                                           style="border-radius: 10px;">
+                                                            <i class="bi bi-trash me-1"></i>
+                                                            <span class="d-none d-sm-inline">Remove</span>
+                                                        </a>
+                                                        
+                                                        <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Product.Id" 
+                                                           class="btn btn-outline-info btn-sm fw-medium"
+                                                           style="border-radius: 10px;">
+                                                            <i class="bi bi-eye me-1"></i>
+                                                            <span class="d-none d-sm-inline">View</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Clear Cart Button -->
+                        <div class="cart-actions mb-4">
+                            <div class="card border-0 shadow-sm" style="border-radius: 15px; background: linear-gradient(145deg, rgba(220, 53, 69, 0.05), rgba(220, 53, 69, 0.02));">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1 fw-bold text-danger">
+                                                <i class="bi bi-trash3 me-2"></i>Clear Cart
+                                            </h6>
+                                            <small class="text-muted">Remove all items from your cart</small>
+                                        </div>
+                                        <a asp-action="ClearCart" 
+                                           class="btn btn-outline-danger fw-medium"
+                                           onclick="return confirm('Are you sure you want to clear your entire cart? This action cannot be undone.')"
+                                           style="border-radius: 10px;">
+                                            <i class="bi bi-trash3 me-1"></i>Clear All
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="col-12 col-xl-4">
+                    <div class="cart-summary position-sticky" style="top: 20px;">
+                        <!-- Order Summary Card -->
+                        <div class="card border-0 shadow-lg mb-4" style="border-radius: 15px;">
+                            <div class="card-header text-white py-4" 
+                                 style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #2C3E50, #34495E);">
+                                <h5 class="mb-0 fw-bold">
+                                    <i class="bi bi-receipt me-2"></i>Order Summary
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <!-- Summary Details -->
+                                <div class="summary-details">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Items (@Model.ShoppingCartList.Count()):</span>
+                                        <span class="fw-medium">@Model.ShoppingCartList.Sum(x => x.Count) books</span>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Subtotal:</span>
+                                        <span class="fw-medium">@Model.OrderHeader.OrderTotal.ToString("C")</span>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Shipping:</span>
+                                        <span class="text-success fw-medium">
+                                            <i class="bi bi-truck me-1"></i>FREE
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Tax:</span>
+                                        <span class="fw-medium">Calculated at checkout</span>
+                                    </div>
+                                    
+                                    <!-- Bulk Savings Display -->
+                                    @{
+                                        decimal totalRegularPrice = 0;
+                                        foreach (var item in Model.ShoppingCartList)
+                                        {
+                                            totalRegularPrice += (decimal)item.Product.Price * item.Count;
+                                        }
+                                        decimal totalSavings = totalRegularPrice - (decimal)Model.OrderHeader.OrderTotal;
+                                    }
+                                    
+                                    @if (totalSavings > 0)
+                                    {
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span class="text-success">
+                                                <i class="bi bi-piggy-bank me-1"></i>Bulk Savings:
+                                            </span>
+                                            <span class="fw-bold text-success">-@totalSavings.ToString("C")</span>
+                                        </div>
+                                    }
+                                    
+                                    <hr class="my-3">
+                                    
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <span class="h6 fw-bold">Total:</span>
+                                        <span class="h5 fw-bold text-primary">@Model.OrderHeader.OrderTotal.ToString("C")</span>
+                                    </div>
+                                </div>
+
+                                <!-- Checkout Button -->
+                                <div class="checkout-actions d-grid gap-3">
+                                    <a asp-action="Summary" asp-controller="Cart" asp-area="Customer" 
+                                       class="btn btn-success btn-lg fw-bold shadow-lg" 
+                                       style="border-radius: 12px; background: linear-gradient(135deg, #27AE60, #2ECC71);">
+                                        <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+                                    </a>
+                                    
+                                    <a asp-area="Customer" asp-controller="Home" asp-action="Index" 
+                                       class="btn btn-outline-primary fw-medium" 
+                                       style="border-radius: 12px;">
+                                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Promo Code Card -->
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold mb-3 text-primary">
+                                    <i class="bi bi-tag me-2"></i>Promo Code
+                                </h6>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter promo code" 
+                                           style="border-radius: 10px 0 0 10px;">
+                                    <button class="btn btn-outline-primary" type="button" 
+                                            style="border-radius: 0 10px 10px 0;">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>Enter your discount code if you have one
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Security Features -->
+                        <div class="security-features">
+                            <div class="card border-0 shadow-sm" 
+                                 style="border-radius: 15px; background: linear-gradient(145deg, rgba(39, 174, 96, 0.05), rgba(46, 204, 113, 0.05));">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold mb-3 text-success">
+                                        <i class="bi bi-shield-check me-2"></i>Secure Checkout
+                                    </h6>
+                                    <div class="security-items">
+                                        <div class="security-item d-flex align-items-center mb-2">
+                                            <i class="bi bi-lock-fill text-success me-2"></i>
+                                            <small class="text-muted">SSL Encrypted</small>
+                                        </div>
+                                        <div class="security-item d-flex align-items-center mb-2">
+                                            <i class="bi bi-credit-card text-success me-2"></i>
+                                            <small class="text-muted">Secure Payment</small>
+                                        </div>
+                                        <div class="security-item d-flex align-items-center">
+                                            <i class="bi bi-arrow-return-left text-success me-2"></i>
+                                            <small class="text-muted">30-Day Returns</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Empty Cart -->
+            <div class="empty-cart text-center py-5">
+                <div class="empty-cart-content">
+                    <div class="empty-cart-icon mb-4">
+                        <i class="bi bi-cart-x display-1 text-muted opacity-50"></i>
+                    </div>
+                    <h3 class="fw-bold text-muted mb-3">Your cart is empty</h3>
+                    <p class="text-muted mb-4 lead">Looks like you haven't added any books to your cart yet.</p>
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index" 
+                       class="btn btn-primary btn-lg fw-bold shadow-lg" 
+                       style="border-radius: 15px; background: linear-gradient(135deg, #4b7147, #578553);">
+                        <i class="bi bi-book me-2"></i>Start Shopping
+                    </a>
+                </div>
+                
+                <!-- Featured Categories -->
+                <div class="featured-categories mt-5">
+                    <h5 class="fw-bold mb-4 text-primary">Popular Categories</h5>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-6 col-md-3">
+                            <div class="category-card card border-0 shadow-sm h-100" style="border-radius: 12px;">
+                                <div class="card-body text-center py-3">
+                                    <i class="bi bi-journal-bookmark text-primary fs-3 mb-2"></i>
+                                    <h6 class="fw-medium">Fiction</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="category-card card border-0 shadow-sm h-100" style="border-radius: 12px;">
+                                <div class="card-body text-center py-3">
+                                    <i class="bi bi-gear text-success fs-3 mb-2"></i>
+                                    <h6 class="fw-medium">Technology</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="category-card card border-0 shadow-sm h-100" style="border-radius: 12px;">
+                                <div class="card-body text-center py-3">
+                                    <i class="bi bi-lightbulb text-warning fs-3 mb-2"></i>
+                                    <h6 class="fw-medium">Self-Help</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="category-card card border-0 shadow-sm h-100" style="border-radius: 12px;">
+                                <div class="card-body text-center py-3">
+                                    <i class="bi bi-mortarboard text-info fs-3 mb-2"></i>
+                                    <h6 class="fw-medium">Education</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCartAnimations();
+            initializeQuantityControls();
+            initializeMobileOptimizations();
+            displayCartStatistics();
+        });
+
+        function initializeCartAnimations() {
+            // Animate cart items on load
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const cartItems = document.querySelectorAll('.cart-item');
+                cartItems.forEach((item, index) => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(30px)';
+                    item.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                    observer.observe(item);
+                });
+            }
+
+            // Cart item hover effects
+            const cartCards = document.querySelectorAll('.cart-item .card');
+            cartCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 15px 35px rgba(0,0,0,0.1)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+        }
+
+        function initializeQuantityControls() {
+            // Add loading state to quantity buttons
+            const quantityButtons = document.querySelectorAll('.quantity-controls a');
+            quantityButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const icon = this.querySelector('i');
+                    const originalIcon = icon.className;
+                    
+                    // Show loading
+                    icon.className = 'bi bi-arrow-repeat';
+                    icon.style.animation = 'spin 1s linear infinite';
+                    this.style.pointerEvents = 'none';
+                    
+                    // Note: The actual redirect will happen, so this is just visual feedback
+                });
+            });
+        }
+
+        function initializeMobileOptimizations() {
+            // Enhanced mobile interactions
+            if ('ontouchstart' in window) {
+                const interactiveElements = document.querySelectorAll('.btn, .card, .category-card');
+                interactiveElements.forEach(element => {
+                    element.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    element.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    });
+                });
+            }
+
+            // Sticky summary optimization for mobile
+            const cartSummary = document.querySelector('.cart-summary');
+            if (cartSummary && window.innerWidth <= 1200) {
+                cartSummary.style.position = 'relative';
+                cartSummary.style.top = 'auto';
+            }
+        }
+
+        function displayCartStatistics() {
+            // Display cart statistics and savings
+            const cartItems = document.querySelectorAll('.cart-item');
+            const totalItems = @Model.ShoppingCartList.Count();
+            const totalQuantity = @Model.ShoppingCartList.Sum(x => x.Count);
+            const orderTotal = @Model.OrderHeader.OrderTotal;
+            
+            console.log(`Cart Statistics:
+                - Items: ${totalItems}
+                - Total Quantity: ${totalQuantity}
+                - Order Total: $${orderTotal.toFixed(2)}`);
+            
+            // Show bulk savings notification if applicable
+            @{
+                decimal scriptTotalRegularPrice = 0;
+                foreach (var item in Model.ShoppingCartList)
+                {
+                    scriptTotalRegularPrice += (decimal)item.Product.Price * item.Count;
+                }
+                decimal scriptTotalSavings = scriptTotalRegularPrice - (decimal)Model.OrderHeader.OrderTotal;
+            }
+            
+            const totalSavings = @scriptTotalSavings;
+            if (totalSavings > 0) {
+                showNotification(`You're saving $${totalSavings.toFixed(2)} with bulk pricing!`, 'success');
+            }
+        }
+
+        // Utility functions
+        function showNotification(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+            toast.style.borderRadius = '10px';
+            toast.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+
+        // Add spin animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+}
+
+<style>
+    /* Shopping Cart Styling */
+    .cart-main {
+        min-height: 60vh;
+    }
+
+    .cart-item {
+        transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .product-title {
+        font-family: 'Georgia', serif;
+        line-height: 1.3;
+    }
+
+    .product-title a:hover {
+        text-decoration: underline !important;
+    }
+
+    /* Quantity Controls */
+    .quantity-controls a {
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .quantity-controls a:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .quantity-display {
+        min-width: 40px;
+        text-align: center;
+    }
+
+    /* Cart Summary */
+    .cart-summary {
+        z-index: 100;
+    }
+
+    .security-item {
+        transition: all 0.2s ease;
+    }
+
+    .security-item:hover {
+        transform: translateX(3px);
+    }
+
+    /* Empty Cart */
+    .empty-cart-icon {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .category-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Cart Actions */
+    .cart-actions {
+        animation: fadeInUp 0.6s ease;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .display-5 {
+            font-size: 1.8rem !important;
+        }
+        
+        .cart-summary {
+            position: relative !important;
+            top: auto !important;
+        }
+        
+        .product-image img,
+        .book-placeholder {
+            width: 60px !important;
+            height: 75px !important;
+        }
+        
+        .quantity-controls {
+            justify-content: center !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-5 {
+            font-size: 1.5rem !important;
+        }
+        
+        .card-body {
+            padding: 1rem !important;
+        }
+        
+        .quantity-controls a {
+            width: 30px !important;
+            height: 30px !important;
+        }
+    }
+
+    /* Animation Keyframes */
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Print Styles */
+    @@media print {
+        .quantity-controls,
+        .item-actions,
+        .checkout-actions,
+        .cart-actions {
+            display: none !important;
+        }
+        
+        .card {
+            border: 1px solid #dee2e6 !important;
+            box-shadow: none !important;
+        }
+    }
+
+    /* Loading States */
+    .btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #4b7147, #578553);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #3a5a39, #4a6b4a);
+    }
+</style>
+

@@ -1,0 +1,637 @@
+@using BulkyWeb.Areas.Admin.Models
+@model CreateUserViewModel
+@{
+    ViewData["Title"] = "Create User - Admin";
+}
+
+<!-- Create User Hero Section -->
+<section class="create-user-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%23198754\">??</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%23198754\">?</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-white p-3 rounded-3 shadow-sm border-0">
+                        <li class="breadcrumb-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-house me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="text-decoration-none text-primary">
+                                <i class="bi bi-people me-1"></i>User Management
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-success fw-medium" aria-current="page">
+                            Create User
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <h1 class="display-5 fw-bold text-success mb-3" style="font-family: 'Georgia', serif;">
+                            <i class="bi bi-person-plus-fill me-3"></i>Create New User
+                        </h1>
+                        <p class="lead text-muted mb-4">
+                            Add a new user to the BulkyWeb platform with specific role and permissions
+                        </p>
+                    </div>
+                    <div class="col-12 col-lg-4 text-lg-end">
+                        <div class="admin-badge-container">
+                            <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-shield-exclamation me-1"></i>
+                                Admin Only
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Create User Section -->
+<section class="create-user-form py-4 py-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="row g-4 g-lg-5">
+                    <!-- Create User Form -->
+                    <div class="col-12 col-lg-8">
+                        <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                            <!-- Card Header -->
+                            <div class="card-header bg-success text-white py-4" style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #198754, #146c43) !important;">
+                                <h2 class="card-title mb-0 fw-bold">
+                                    <i class="bi bi-person-fill-add me-2"></i>User Account Details
+                                </h2>
+                                <p class="mb-0 opacity-90">Complete the form below to create a new user account</p>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4 p-md-5">
+                                <form asp-action="Create" method="post" id="createUserForm" class="needs-validation" novalidate>
+                                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-3" role="alert"></div>
+                                    
+                                    <!-- Account Information Section -->
+                                    <div class="form-section mb-5">
+                                        <h4 class="section-title mb-4">
+                                            <i class="bi bi-person-circle me-2 text-primary"></i>Account Information
+                                            <div class="section-divider"></div>
+                                        </h4>
+
+                                        <!-- Email and Role Row -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="Email" class="form-control form-control-lg border-primary" 
+                                                           placeholder="user@example.com" required style="border-width: 2px;" />
+                                                    <label asp-for="Email" class="text-primary fw-medium">
+                                                        <i class="bi bi-envelope me-1"></i>Email Address
+                                                    </label>
+                                                    <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <select asp-for="Role" asp-items="Model.RoleList" 
+                                                            class="form-select form-select-lg border-success" 
+                                                            required style="border-width: 2px;" id="roleSelect">
+                                                        <option value="">-- Select Role --</option>
+                                                    </select>
+                                                    <label asp-for="Role" class="text-success fw-medium">
+                                                        <i class="bi bi-person-badge me-1"></i>User Role
+                                                    </label>
+                                                    <span asp-validation-for="Role" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Company Selection (shown when Company role is selected) -->
+                                        <div class="form-floating mb-4 d-none" id="companySelectionDiv">
+                                            <select asp-for="CompanyId" asp-items="Model.CompanyList" 
+                                                    class="form-select form-select-lg border-info" 
+                                                    style="border-width: 2px;" id="companySelect">
+                                                <option value="">-- Select Company --</option>
+                                            </select>
+                                            <label asp-for="CompanyId" class="text-info fw-medium">
+                                                <i class="bi bi-building me-1"></i>Company Assignment
+                                            </label>
+                                            <span asp-validation-for="CompanyId" class="text-danger small mt-1 d-block"></span>
+                                            <div class="form-text small text-info mt-2">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Required for Company role users
+                                            </div>
+                                        </div>
+
+                                        <!-- Password Row -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <div class="form-floating position-relative">
+                                                    <input asp-for="Password" class="form-control form-control-lg border-warning" 
+                                                           type="password" required style="border-width: 2px;" id="passwordInput" />
+                                                    <label asp-for="Password" class="text-warning fw-medium">
+                                                        <i class="bi bi-lock me-1"></i>Password
+                                                    </label>
+                                                    <button type="button" class="btn btn-sm position-absolute" 
+                                                            style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; border: none; background: none;"
+                                                            onclick="togglePassword('passwordInput', this)">
+                                                        <i class="bi bi-eye text-muted"></i>
+                                                    </button>
+                                                    <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating position-relative">
+                                                    <input asp-for="ConfirmPassword" class="form-control form-control-lg border-warning" 
+                                                           type="password" required style="border-width: 2px;" id="confirmPasswordInput" />
+                                                    <label asp-for="ConfirmPassword" class="text-warning fw-medium">
+                                                        <i class="bi bi-shield-check me-1"></i>Confirm Password
+                                                    </label>
+                                                    <button type="button" class="btn btn-sm position-absolute" 
+                                                            style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; border: none; background: none;"
+                                                            onclick="togglePassword('confirmPasswordInput', this)">
+                                                        <i class="bi bi-eye text-muted"></i>
+                                                    </button>
+                                                    <span asp-validation-for="ConfirmPassword" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Personal Information Section -->
+                                    <div class="form-section mb-5">
+                                        <h4 class="section-title mb-4">
+                                            <i class="bi bi-person-fill me-2 text-info"></i>Personal Information
+                                            <div class="section-divider"></div>
+                                        </h4>
+
+                                        <!-- Name and Phone Row -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="Name" class="form-control form-control-lg border-info" 
+                                                           placeholder="Full Name" required style="border-width: 2px;" />
+                                                    <label asp-for="Name" class="text-info fw-medium">
+                                                        <i class="bi bi-person me-1"></i>Full Name
+                                                    </label>
+                                                    <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="PhoneNumber" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="Phone Number" style="border-width: 2px;" />
+                                                    <label asp-for="PhoneNumber" class="text-secondary fw-medium">
+                                                        <i class="bi bi-telephone me-1"></i>Phone Number
+                                                    </label>
+                                                    <span asp-validation-for="PhoneNumber" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Address Information Section -->
+                                    <div class="form-section mb-5">
+                                        <h4 class="section-title mb-4">
+                                            <i class="bi bi-geo-alt-fill me-2 text-warning"></i>Address Information
+                                            <small class="text-muted d-block mt-1">Optional - for shipping and billing</small>
+                                            <div class="section-divider"></div>
+                                        </h4>
+
+                                        <!-- Street Address -->
+                                        <div class="form-floating mb-4">
+                                            <input asp-for="StreetAddress" class="form-control form-control-lg border-secondary" 
+                                                   placeholder="Street Address" style="border-width: 2px;" />
+                                            <label asp-for="StreetAddress" class="text-secondary fw-medium">
+                                                <i class="bi bi-house me-1"></i>Street Address
+                                            </label>
+                                            <span asp-validation-for="StreetAddress" class="text-danger small mt-1 d-block"></span>
+                                        </div>
+
+                                        <!-- City, State, Postal Code Row -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="City" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="City" style="border-width: 2px;" />
+                                                    <label asp-for="City" class="text-secondary fw-medium">
+                                                        <i class="bi bi-building me-1"></i>City
+                                                    </label>
+                                                    <span asp-validation-for="City" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating">
+                                                    <input asp-for="State" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="State" style="border-width: 2px;" />
+                                                    <label asp-for="State" class="text-secondary fw-medium">
+                                                        <i class="bi bi-map me-1"></i>State
+                                                    </label>
+                                                    <span asp-validation-for="State" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating">
+                                                    <input asp-for="PostalCode" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="Postal Code" style="border-width: 2px;" />
+                                                    <label asp-for="PostalCode" class="text-secondary fw-medium">
+                                                        <i class="bi bi-mailbox me-1"></i>Postal Code
+                                                    </label>
+                                                    <span asp-validation-for="PostalCode" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                                                <a asp-action="Index" class="btn btn-secondary btn-lg px-4 order-2 order-sm-1" style="border-radius: 12px;">
+                                                    <i class="bi bi-arrow-left me-2"></i>Cancel
+                                                </a>
+                                                <button type="submit" class="btn btn-success btn-lg px-4 fw-bold shadow-lg order-1 order-sm-2" 
+                                                        style="border-radius: 12px;" id="submitBtn">
+                                                    <i class="bi bi-person-plus-fill me-2"></i>
+                                                    <span id="submitText">Create User</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information Panel -->
+                    <div class="col-12 col-lg-4">
+                        <!-- Role Information -->
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 text-success fw-bold">
+                                    <i class="bi bi-info-circle me-2"></i>User Roles
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="role-info">
+                                    <div class="role-item mb-3 p-3 rounded" style="background: rgba(13, 110, 253, 0.05); border-left: 4px solid #0d6efd;">
+                                        <h6 class="fw-bold text-primary mb-1">
+                                            <i class="bi bi-person me-1"></i>Customer
+                                        </h6>
+                                        <small class="text-muted">Browse and purchase books from the collection</small>
+                                    </div>
+                                    <div class="role-item mb-3 p-3 rounded" style="background: rgba(25, 135, 84, 0.05); border-left: 4px solid #198754;">
+                                        <h6 class="fw-bold text-success mb-1">
+                                            <i class="bi bi-building me-1"></i>Company
+                                        </h6>
+                                        <small class="text-muted">Business account for bulk purchases and orders</small>
+                                    </div>
+                                    <div class="role-item mb-3 p-3 rounded" style="background: rgba(255, 193, 7, 0.05); border-left: 4px solid #ffc107;">
+                                        <h6 class="fw-bold text-warning mb-1">
+                                            <i class="bi bi-briefcase me-1"></i>Employee
+                                        </h6>
+                                        <small class="text-muted">Staff account with limited administrative access</small>
+                                    </div>
+                                    <div class="role-item p-3 rounded" style="background: rgba(220, 53, 69, 0.05); border-left: 4px solid #dc3545;">
+                                        <h6 class="fw-bold text-danger mb-1">
+                                            <i class="bi bi-shield-check me-1"></i>Admin
+                                        </h6>
+                                        <small class="text-muted">Full administrative access to manage the system</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Creation Guidelines -->
+                        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 text-info fw-bold">
+                                    <i class="bi bi-list-check me-2"></i>Creation Guidelines
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <ul class="list-unstyled">
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Email:</strong> Must be unique in the system
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Password:</strong> Minimum 6 characters required
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        <strong>Company Role:</strong> Must select a company
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="bi bi-shield-check text-warning me-2"></i>
+                                        <strong>Auto-Confirmation:</strong> Admin-created users are automatically confirmed
+                                    </li>
+                                    <li class="mb-0">
+                                        <i class="bi bi-shield-check text-warning me-2"></i>
+                                        <strong>Audit Log:</strong> All creation actions are logged
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            initializeRoleSelection();
+            initializeValidation();
+        });
+
+        function initializeForm() {
+            const form = document.getElementById('createUserForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function() {
+                    submitBtn.disabled = true;
+                    submitText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating User...';
+                    submitBtn.classList.add('btn-secondary');
+                    submitBtn.classList.remove('btn-success');
+                });
+            }
+        }
+
+        function initializeRoleSelection() {
+            const roleSelect = document.getElementById('roleSelect');
+            const companySelectionDiv = document.getElementById('companySelectionDiv');
+            const companySelect = document.getElementById('companySelect');
+            const roleItems = document.querySelectorAll('.role-item');
+
+            if (roleSelect) {
+                roleSelect.addEventListener('change', function() {
+                    const selectedRole = this.value;
+                    
+                    // Reset all role items
+                    roleItems.forEach(item => {
+                        item.style.transform = 'scale(1)';
+                        item.style.opacity = '0.7';
+                        item.style.transition = 'all 0.3s ease';
+                    });
+
+                    // Show/hide company selection based on role
+                    if (selectedRole === 'Company') {
+                        companySelectionDiv.classList.remove('d-none');
+                        companySelect.setAttribute('required', 'required');
+                        companySelectionDiv.style.animation = 'fadeInDown 0.5s ease';
+                    } else {
+                        companySelectionDiv.classList.add('d-none');
+                        companySelect.removeAttribute('required');
+                        companySelect.value = '';
+                    }
+
+                    // Highlight selected role
+                    if (selectedRole) {
+                        const roleIndex = {
+                            'Customer': 0,
+                            'Company': 1,
+                            'Employee': 2,
+                            'Admin': 3
+                        };
+
+                        const selectedIndex = roleIndex[selectedRole];
+                        if (selectedIndex !== undefined && roleItems[selectedIndex]) {
+                            roleItems[selectedIndex].style.transform = 'scale(1.05)';
+                            roleItems[selectedIndex].style.opacity = '1';
+                            roleItems[selectedIndex].style.boxShadow = '0 8px 25px rgba(0,0,0,0.1)';
+                        }
+                    }
+                });
+            }
+        }
+
+        function initializeValidation() {
+            const form = document.querySelector('.needs-validation');
+            
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Scroll to first invalid field
+                        const firstInvalid = form.querySelector(':invalid');
+                        if (firstInvalid) {
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            firstInvalid.focus();
+                        }
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            }
+
+            // Real-time validation feedback
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    } else if (this.value.length > 0) {
+                        this.style.borderColor = '#dc3545';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    }
+                });
+            });
+
+            // Phone number formatting
+            const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 6) {
+                        value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                    } else if (value.length >= 3) {
+                        value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Postal code formatting
+            const postalInput = document.querySelector('input[name="PostalCode"]');
+            if (postalInput) {
+                postalInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 5) {
+                        value = value.slice(0, 5) + (value.length > 5 ? '-' + value.slice(5, 9) : '');
+                    }
+                    e.target.value = value;
+                });
+            }
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash text-muted';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye text-muted';
+            }
+        }
+
+        // Animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+}
+
+<style>
+    /* Create User Form Styling */
+    .create-user-hero {
+        min-height: 40vh;
+    }
+
+    .form-section {
+        position: relative;
+    }
+
+    .section-title {
+        color: #495057;
+        font-family: 'Georgia', serif;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .section-divider {
+        height: 3px;
+        background: linear-gradient(to right, #0d6efd, #198754, #ffc107);
+        border-radius: 3px;
+        margin-top: 8px;
+        width: 60px;
+    }
+
+    .form-floating > label {
+        font-family: 'Georgia', serif;
+        font-weight: 500;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+
+    .role-item {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .role-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Enhanced form controls */
+    .form-floating {
+        position: relative;
+    }
+
+    .form-floating .btn {
+        z-index: 5;
+    }
+
+    /* Admin badge animation */
+    .admin-badge-container .badge {
+        animation: gentle-pulse 3s ease-in-out infinite;
+    }
+
+    @@keyframes gentle-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    /* Button styling */
+    .btn {
+        transition: all 0.3s ease;
+        border-width: 2px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Custom validation styling */
+    .was-validated .form-control:valid,
+    .was-validated .form-select:valid {
+        border-color: #198754;
+        background-image: none;
+    }
+
+    .was-validated .form-control:invalid,
+    .was-validated .form-select:invalid {
+        border-color: #dc3545;
+        background-image: none;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .create-user-hero {
+            min-height: 30vh;
+            padding: 2rem 0 !important;
+        }
+        
+        .display-5 {
+            font-size: 2rem !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-5 {
+            font-size: 1.75rem !important;
+        }
+        
+        .btn-lg {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.9rem !important;
+        }
+
+        .role-item {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Loading state styling */
+    .btn:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+</style>

@@ -1,0 +1,662 @@
+﻿@model Bulky.Models.Models.Company
+
+@{
+    ViewData["Title"] = "Create Company - BulkyWeb";
+}
+
+<div class="container-fluid px-2 px-sm-3 py-2 py-md-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <!-- Page Header -->
+            <div class="mb-3 mb-md-4 text-center">
+                <h1 class="display-6 fw-bold text-primary mb-2 fs-4 fs-sm-3 fs-md-2">
+                    <i class="bi bi-building-add me-2"></i>Add Business Partner
+                </h1>
+                <p class="text-muted lead d-none d-md-block mb-0">Register a new company in your business network</p>
+                <p class="text-muted small d-md-none mb-0">Add new business partner</p>
+            </div>
+
+            <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                <!-- Card Header -->
+                <div class="card-header bg-primary bg-gradient text-white py-3 py-md-4" 
+                     style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #192E2F 0%, #3A595C 100%) !important;">
+                    <div class="text-center">
+                        <h2 class="fs-5 fs-md-4 fw-medium mb-1">
+                            <i class="bi bi-building me-2"></i>Company Information
+                        </h2>
+                        <p class="mb-0 opacity-90 small d-none d-md-block">Complete the form below to add a new business partner</p>
+                        <p class="mb-0 opacity-90 small d-md-none">Fill company details</p>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-3 p-sm-4 p-md-5">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-3 small mb-4 d-none" role="alert"></div>
+                        
+                        <!-- Progress Steps Indicator -->
+                        <div class="progress-steps mb-4 d-none d-md-block">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="step-indicator active">
+                                    <span class="step-number">1</span>
+                                    <span class="step-label">Company</span>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-indicator active">
+                                    <span class="step-number">2</span>
+                                    <span class="step-label">Address</span>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-indicator active">
+                                    <span class="step-number">3</span>
+                                    <span class="step-label">Contact</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 1: Company Information -->
+                        <div class="form-section mb-4 mb-md-5">
+                            <h4 class="section-title mb-3">
+                                <i class="bi bi-building-fill me-2 text-primary"></i>Company Details
+                            </h4>
+                            
+                            <!-- Company Name -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="Name" 
+                                           class="form-control form-control-lg border-primary" 
+                                           placeholder="Enter Company Name"
+                                           maxlength="100"
+                                           required 
+                                           style="border-width: 2px;" />
+                                    <label asp-for="Name" class="text-primary fw-medium">
+                                        <i class="bi bi-building me-1"></i>Company Name
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-primary mt-2" id="nameHelpText">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Enter the official company name (max 100 characters)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Address Information -->
+                        <div class="form-section mb-4 mb-md-5">
+                            <h4 class="section-title mb-3">
+                                <i class="bi bi-geo-alt-fill me-2 text-success"></i>Business Address
+                                <small class="text-muted ms-2">(Optional)</small>
+                            </h4>
+                            
+                            <!-- Street Address -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="StreetAddress" 
+                                           class="form-control form-control-lg border-success" 
+                                           placeholder="Enter Street Address"
+                                           maxlength="200"
+                                           style="border-width: 2px;" />
+                                    <label asp-for="StreetAddress" class="text-success fw-medium">
+                                        <i class="bi bi-house me-1"></i>Street Address
+                                    </label>
+                                </div>
+                                <span asp-validation-for="StreetAddress" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Complete street address including number and street name
+                                </div>
+                            </div>
+
+                            <!-- City, State, Postal Code Row -->
+                            <div class="row g-2 g-md-3">
+                                <!-- City -->
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-4">
+                                        <input asp-for="City" 
+                                               class="form-control form-control-lg border-success" 
+                                               placeholder="Enter City"
+                                               maxlength="50"
+                                               style="border-width: 2px;" />
+                                        <label asp-for="City" class="text-success fw-medium">
+                                            <i class="bi bi-building me-1"></i>City
+                                        </label>
+                                        <span asp-validation-for="City" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+                                </div>
+                                
+                                <!-- State -->
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3 mb-md-4">
+                                        <input asp-for="State" 
+                                               class="form-control form-control-lg border-success" 
+                                               placeholder="Enter State"
+                                               maxlength="50"
+                                               style="border-width: 2px;" />
+                                        <label asp-for="State" class="text-success fw-medium">
+                                            <i class="bi bi-map me-1"></i>State
+                                        </label>
+                                        <span asp-validation-for="State" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Postal Code -->
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3 mb-md-4">
+                                        <input asp-for="PostalCode" 
+                                               class="form-control form-control-lg border-success" 
+                                               placeholder="Enter Postal Code"
+                                               maxlength="20"
+                                               style="border-width: 2px;" />
+                                        <label asp-for="PostalCode" class="text-success fw-medium">
+                                            <i class="bi bi-mailbox me-1"></i>Postal Code
+                                        </label>
+                                        <span asp-validation-for="PostalCode" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Contact Information -->
+                        <div class="form-section mb-4 mb-md-5">
+                            <h4 class="section-title mb-3">
+                                <i class="bi bi-telephone-fill me-2 text-info"></i>Contact Information
+                                <small class="text-muted ms-2">(Optional)</small>
+                            </h4>
+                            
+                            <!-- Phone Number -->
+                            <div class="mb-4 mb-md-5">
+                                <div class="form-floating">
+                                    <input asp-for="PhoneNumber" 
+                                           class="form-control form-control-lg border-info" 
+                                           placeholder="Enter Phone Number"
+                                           maxlength="20"
+                                           type="tel"
+                                           style="border-width: 2px;" />
+                                    <label asp-for="PhoneNumber" class="text-info fw-medium">
+                                        <i class="bi bi-telephone me-1"></i>Phone Number
+                                    </label>
+                                </div>
+                                <span asp-validation-for="PhoneNumber" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-info mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Primary business phone number with area code
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row g-2 g-md-3">
+                            <div class="col-12 col-sm-6">
+                                <button type="submit" class="btn btn-primary w-100 py-2 py-md-3 shadow-lg fw-medium" 
+                                        style="border-radius: 12px; background: linear-gradient(135deg, #192E2F, #3A595C);">
+                                    <i class="bi bi-building-check me-2"></i>
+                                    <span class="d-none d-sm-inline">Create Company</span>
+                                    <span class="d-sm-none">Create</span>
+                                </button>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <a asp-action="Index" class="btn btn-secondary w-100 py-2 py-md-3 shadow-sm fw-medium" 
+                                   style="border-radius: 12px;">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    <span class="d-none d-sm-inline">Back to Companies</span>
+                                    <span class="d-sm-none">Back</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Progress Indicator (Hidden by default) -->
+                        <div class="text-center mt-4 d-none" id="loadingIndicator">
+                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <small class="text-primary fw-medium">Creating company profile...</small>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer with Tips -->
+                <div class="card-footer border-0 py-3" 
+                     style="background: linear-gradient(135deg, rgba(25, 46, 47, 0.03) 0%, rgba(75, 113, 71, 0.03) 100%); border-radius: 0 0 15px 15px;">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-6">
+                            <small class="text-primary d-flex align-items-center">
+                                <i class="bi bi-lightbulb me-2"></i>
+                                <span class="fw-medium d-none d-md-inline">Tip: Only company name is required. Address and contact details can be added later.</span>
+                                <span class="fw-medium d-md-none">Required: Company name only</span>
+                            </small>
+                        </div>
+                        <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>
+                                <span class="d-none d-sm-inline">All information is securely stored</span>
+                                <span class="d-sm-none">Secure storage</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Help Card -->
+            <div class="card mt-3 d-md-none shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body py-3 px-3" 
+                     style="background: linear-gradient(135deg, rgba(189, 116, 24, 0.05) 0%, rgba(189, 116, 24, 0.1) 100%); border-left: 4px solid #BD7418 !important;">
+                    <small class="d-flex align-items-center text-warning fw-medium">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <span>Fill in as much information as available for better business relationships</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFormValidation();
+            initializeCharacterCounters();
+            initializePhoneFormatting();
+            initializeMobileEnhancements();
+        });
+
+        function initializeFormValidation() {
+            const forms = document.querySelectorAll('.needs-validation');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Show validation summary if there are errors
+                        const validationSummary = form.querySelector('[asp-validation-summary]');
+                        if (validationSummary) {
+                            validationSummary.classList.remove('d-none');
+                        }
+                        
+                        // Add error styling to invalid fields
+                        const invalidFields = form.querySelectorAll(':invalid');
+                        invalidFields.forEach(field => {
+                            field.style.borderColor = '#dc3545';
+                            field.style.borderWidth = '2px';
+                            field.style.backgroundColor = 'rgba(220, 53, 69, 0.05)';
+                        });
+                    } else {
+                        // Show loading indicator on valid submission
+                        if (loadingIndicator) {
+                            loadingIndicator.classList.remove('d-none');
+                        }
+                        
+                        // Disable submit button to prevent double submission
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating Company...';
+                        }
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+            // Real-time validation feedback
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                        this.style.backgroundColor = '';
+                    } else if (this.value.length > 0) {
+                        this.style.borderColor = '#dc3545';
+                        this.style.backgroundColor = 'rgba(220, 53, 69, 0.05)';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                        this.style.backgroundColor = '';
+                    }
+                });
+
+                // Enhanced focus styling
+                input.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 0.25rem rgba(25, 46, 47, 0.25)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                });
+            });
+        }
+
+        function initializeCharacterCounters() {
+            // Company name character counter
+            const nameInput = document.querySelector('input[name="Name"]');
+            const nameHelpText = document.getElementById('nameHelpText');
+            
+            if (nameInput && nameHelpText) {
+                const maxLength = nameInput.getAttribute('maxlength');
+                
+                nameInput.addEventListener('input', function() {
+                    const currentLength = this.value.length;
+                    const remaining = maxLength - currentLength;
+                    
+                    nameHelpText.innerHTML = `<i class="bi bi-info-circle me-1"></i>Enter the official company name (${remaining} characters remaining)`;
+                    
+                    if (remaining < 10) {
+                        nameHelpText.classList.remove('text-primary');
+                        nameHelpText.classList.add('text-warning');
+                        nameInput.style.borderColor = '#BD7418';
+                    } else if (remaining < 5) {
+                        nameHelpText.classList.remove('text-primary', 'text-warning');
+                        nameHelpText.classList.add('text-danger');
+                        nameInput.style.borderColor = '#dc3545';
+                    } else {
+                        nameHelpText.classList.remove('text-warning', 'text-danger');
+                        nameHelpText.classList.add('text-primary');
+                        nameInput.style.borderColor = '#192E2F';
+                    }
+                });
+            }
+        }
+
+        function initializePhoneFormatting() {
+            const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+            
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    // Remove non-numeric characters except + and -
+                    let value = this.value.replace(/[^\d+\-\(\)\s]/g, '');
+                    
+                    // Basic US phone number formatting
+                    if (value.length === 10 && !value.includes('+')) {
+                        value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                    }
+                    
+                    this.value = value;
+                });
+
+                phoneInput.addEventListener('blur', function() {
+                    if (this.value.length > 0) {
+                        // Validate phone number format
+                        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$|^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+                        if (!phoneRegex.test(this.value.replace(/[\s\-\(\)]/g, ''))) {
+                            this.style.borderColor = '#BD7418';
+                            this.style.backgroundColor = 'rgba(189, 116, 24, 0.05)';
+                            
+                            // Show temporary warning
+                            const existingWarning = this.parentElement.querySelector('.phone-warning');
+                            if (existingWarning) existingWarning.remove();
+                            
+                            const warning = document.createElement('small');
+                            warning.className = 'phone-warning text-warning d-block mt-1';
+                            warning.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Please enter a valid phone number';
+                            this.parentElement.insertAdjacentElement('afterend', warning);
+                            
+                            setTimeout(() => {
+                                warning?.remove();
+                                if (this.checkValidity()) {
+                                    this.style.borderColor = '#0dcaf0';
+                                    this.style.backgroundColor = '';
+                                }
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+        }
+
+        function initializeMobileEnhancements() {
+            // Touch-friendly form interactions for mobile
+            if ('ontouchstart' in window) {
+                const formControls = document.querySelectorAll('.form-control');
+                formControls.forEach(function(control) {
+                    control.addEventListener('focus', function() {
+                        // Scroll to input on mobile when focused
+                        setTimeout(() => {
+                            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 300);
+                    });
+                });
+
+                // Add touch feedback for buttons
+                const buttons = document.querySelectorAll('.btn');
+                buttons.forEach(function(btn) {
+                    btn.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    btn.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    });
+                });
+            }
+
+            // Form section animations on scroll (desktop only)
+            if (window.innerWidth >= 768 && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const sections = document.querySelectorAll('.form-section');
+                sections.forEach((section, index) => {
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(20px)';
+                    section.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
+                    observer.observe(section);
+                });
+            }
+        }
+
+        // Auto-save to localStorage for form recovery
+        const formInputs = document.querySelectorAll('input');
+        formInputs.forEach(input => {
+            // Load saved data
+            const savedValue = localStorage.getItem(`company_create_${input.name}`);
+            if (savedValue && !input.value) {
+                input.value = savedValue;
+            }
+
+            // Save data on input
+            input.addEventListener('input', function() {
+                localStorage.setItem(`company_create_${this.name}`, this.value);
+            });
+        });
+
+        // Clear localStorage on successful form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            if (this.checkValidity()) {
+                formInputs.forEach(input => {
+                    localStorage.removeItem(`company_create_${input.name}`);
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Company Create Page Styling */
+    .form-floating > label {
+        font-family: 'Georgia', serif;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(25, 46, 47, 0.25);
+        border-color: #192E2F;
+    }
+
+    /* Progress Steps Styling */
+    .progress-steps {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .step-indicator {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #192E2F;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .step-indicator .step-number {
+        font-size: 1.1rem;
+    }
+
+    .step-indicator .step-label {
+        font-size: 0.7rem;
+        margin-top: 2px;
+    }
+
+    .step-line {
+        flex: 1;
+        height: 2px;
+        background: #192E2F;
+        margin: 0 15px;
+    }
+
+    /* Section Styling */
+    .section-title {
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 8px;
+        font-size: 1.1rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+        border-radius: 12px;
+        background: rgba(248, 249, 250, 0.5);
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .form-section:hover {
+        background: rgba(248, 249, 250, 0.8);
+        border-left-color: #192E2F;
+    }
+
+    /* Enhanced button styling */
+    .btn {
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-primary {
+        border-width: 2px;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .display-6 {
+            font-size: 1.5rem !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .form-section {
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-6 {
+            font-size: 1.25rem !important;
+        }
+        
+        .form-section {
+            padding: 0.5rem;
+        }
+        
+        .section-title {
+            font-size: 0.95rem;
+        }
+    }
+
+    /* Loading state styling */
+    .btn:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+
+    /* Custom validation styling */
+    .was-validated .form-control:valid {
+        border-color: #198754;
+        background-image: none;
+    }
+
+    .was-validated .form-control:invalid {
+        border-color: #dc3545;
+        background-image: none;
+    }
+
+    /* Card enhancements */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Form field enhancements */
+    .form-floating {
+        position: relative;
+    }
+
+    .form-floating:hover {
+        z-index: 2;
+    }
+
+    /* Animation keyframes */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Print styles */
+    @@media print {
+        .btn, .card-footer, .step-indicator {
+            display: none !important;
+        }
+        
+        .card {
+            border: 1px solid #dee2e6 !important;
+            box-shadow: none !important;
+        }
+    }
+</style>

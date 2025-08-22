@@ -1,0 +1,780 @@
+﻿@model Bulky.Models.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="container-fluid px-2 px-sm-3 py-2 py-md-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+            <div class="card shadow-lg border-0">
+                <!-- Card Header -->
+                <div class="card-header bg-success bg-gradient text-white py-3 py-md-4">
+                    <div class="text-center">
+                        <h1 class="fs-4 fs-md-3 fw-normal mb-1">
+                            <i class="bi bi-book-fill me-2"></i>Create Product
+                        </h1>
+                        <p class="mb-0 opacity-75 small d-none d-md-block">Add a new product to your catalog</p>
+                        <p class="mb-0 opacity-75 small d-md-none">Add new product</p>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-3 p-sm-4 p-md-5">
+                    <form asp-action="Create" class="needs-validation" novalidate enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3 d-none" role="alert"></div>
+                        
+                        <!-- Product Information Section -->
+                        <div class="mb-4">
+                            <h6 class="text-success fw-bold mb-3">
+                                <i class="bi bi-info-circle me-2"></i>Product Information
+                            </h6>
+                            
+                            <!-- Title Field -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="Product.Title" 
+                                           class="form-control form-control-lg border-success" 
+                                           placeholder="Enter Product Title"
+                                           maxlength="100"
+                                           required 
+                                           style="border-width: 2px;" />
+                                    <label asp-for="Product.Title" class="text-success fw-medium">
+                                        <i class="bi bi-book me-1"></i>Product Title
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Product.Title" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <span id="titleHelpText">Enter the product title (max 100 characters)</span>
+                                </div>
+                            </div>
+
+                            <!-- Author Field -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="Product.Author" 
+                                           class="form-control form-control-lg border-success" 
+                                           placeholder="Enter Author Name"
+                                           maxlength="50"
+                                           required 
+                                           style="border-width: 2px;" />
+                                    <label asp-for="Product.Author" class="text-success fw-medium">
+                                        <i class="bi bi-person me-1"></i>Author Name
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Product.Author" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Enter the author's full name
+                                </div>
+                            </div>
+
+                            <!-- ISBN Field -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="Product.ISBN" 
+                                           class="form-control form-control-lg border-success" 
+                                           placeholder="Enter ISBN"
+                                           pattern="[0-9A-Za-z\-]+"
+                                           required 
+                                           style="border-width: 2px;" />
+                                    <label asp-for="Product.ISBN" class="text-success fw-medium">
+                                        <i class="bi bi-upc me-1"></i>ISBN Number
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Product.ISBN" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Unique ISBN identifier for the product
+                                </div>
+                            </div>
+
+                            <!-- Category Selection Field -->
+                            <div class="mb-3 mb-md-4">
+                                <div class="form-floating">
+                                    <select asp-for="Product.CategoryId" 
+                                            asp-items="@Model.CategoryList"
+                                            class="form-select form-select-lg border-success" 
+                                            required 
+                                            style="border-width: 2px;">
+                                        <option value="">-- Select Category --</option>
+                                    </select>
+                                    <label asp-for="Product.CategoryId" class="text-success fw-medium">
+                                        <i class="bi bi-collection me-1"></i>Product Category
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Product.CategoryId" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <span id="categoryHelpText">Select the category this product belongs to</span>
+                                </div>
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="mb-4 mb-md-5">
+                                <div class="form-floating">
+                                    <textarea asp-for="Product.Description" 
+                                              class="form-control border-success" 
+                                              placeholder="Enter Product Description"
+                                              rows="4"
+                                              maxlength="500"
+                                              style="border-width: 2px; min-height: 120px;"></textarea>
+                                    <label asp-for="Product.Description" class="text-success fw-medium">
+                                        <i class="bi bi-file-text me-1"></i>Product Description
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Product.Description" class="text-danger small mt-1 d-block"></span>
+                                <div class="form-text small text-success">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <span id="descriptionHelpText">Describe the product (max 500 characters)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload Section -->
+                        <div class="mb-4">
+                            <h6 class="text-info fw-bold mb-3">
+                                <i class="bi bi-image me-2"></i>Product Image
+                            </h6>
+
+                            <!-- Image Preview Area -->
+                            <div class="mb-3">
+                                <div class="text-center">
+                                    <div id="imagePreviewContainer" class="position-relative d-inline-block">
+                                        <img id="imagePreview" 
+                                             src="#" 
+                                             alt="Product Image Preview" 
+                                             class="img-thumbnail border-info shadow-sm d-none"
+                                             style="max-width: 200px; max-height: 200px; border-width: 2px !important;" />
+                                        <div id="imagePreviewPlaceholder" 
+                                             class="border border-info border-2 rounded d-flex align-items-center justify-content-center bg-light"
+                                             style="width: 200px; height: 200px; border-style: dashed !important;">
+                                            <div class="text-center text-info">
+                                                <i class="bi bi-image display-4 mb-2"></i>
+                                                <p class="small mb-0 fw-medium">Image Preview</p>
+                                                <p class="small text-muted mb-0">Upload to see preview</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" 
+                                                id="removeImageBtn" 
+                                                class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle d-none"
+                                                style="width: 30px; height: 30px; margin-top: -5px; margin-right: -5px;">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File Input Field -->
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <input type="file" 
+                                           id="imageFile" 
+                                           name="imageFile" 
+                                           class="form-control border-info" 
+                                           accept="image/*"
+                                           style="border-width: 2px;" />
+                                    <button type="button" 
+                                            id="uploadImageBtn" 
+                                            class="btn btn-outline-info fw-medium">
+                                        <i class="bi bi-cloud-upload me-1"></i>Browse
+                                    </button>
+                                </div>
+                                <div class="form-text small text-info">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <span id="imageHelpText">Choose a product image (JPG, PNG, GIF - Max 5MB)</span>
+                                </div>
+                            </div>
+
+                            <!-- Hidden field for ImageUrl -->
+                            <input asp-for="Product.ImageUrl" type="hidden" />
+                        </div>
+
+                        <!-- Pricing Section -->
+                        <div class="mb-4">
+                            <h6 class="text-warning fw-bold mb-3">
+                                <i class="bi bi-currency-dollar me-2"></i>Pricing Information
+                            </h6>
+                            
+                            <div class="row g-3">
+                                <!-- List Price -->
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input asp-for="Product.ListPrice" 
+                                               class="form-control border-warning" 
+                                               placeholder="List Price"
+                                               type="number"
+                                               step="0.01"
+                                               min="0.01"
+                                               max="10000"
+                                               required 
+                                               style="border-width: 2px;" />
+                                        <label asp-for="Product.ListPrice" class="text-warning fw-medium">
+                                            <i class="bi bi-tag me-1"></i>List Price
+                                        </label>
+                                    </div>
+                                    <span asp-validation-for="Product.ListPrice" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <!-- Regular Price -->
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input asp-for="Product.Price" 
+                                               class="form-control border-warning" 
+                                               placeholder="Regular Price"
+                                               type="number"
+                                               step="0.01"
+                                               min="0.01"
+                                               max="10000"
+                                               required 
+                                               style="border-width: 2px;" />
+                                        <label asp-for="Product.Price" class="text-warning fw-medium">
+                                            <i class="bi bi-currency-dollar me-1"></i>Price (1-50)
+                                        </label>
+                                    </div>
+                                    <span asp-validation-for="Product.Price" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <!-- Bulk Price 50+ -->
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input asp-for="Product.Price50" 
+                                               class="form-control border-warning" 
+                                               placeholder="Price for 50+"
+                                               type="number"
+                                               step="0.01"
+                                               min="0.01"
+                                               max="10000"
+                                               required 
+                                               style="border-width: 2px;" />
+                                        <label asp-for="Product.Price50" class="text-warning fw-medium">
+                                            <i class="bi bi-cart me-1"></i>Price (50-100)
+                                        </label>
+                                    </div>
+                                    <span asp-validation-for="Product.Price50" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <!-- Bulk Price 100+ -->
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input asp-for="Product.Price100" 
+                                               class="form-control border-warning" 
+                                               placeholder="Price for 100+"
+                                               type="number"
+                                               step="0.01"
+                                               min="0.01"
+                                               max="10000"
+                                               required 
+                                               style="border-width: 2px;" />
+                                        <label asp-for="Product.Price100" class="text-warning fw-medium">
+                                            <i class="bi bi-cart-plus me-1"></i>Price (100+)
+                                        </label>
+                                    </div>
+                                    <span asp-validation-for="Product.Price100" class="text-danger small mt-1 d-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-text small text-warning mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Set tiered pricing for bulk purchases. Higher quantities should have lower prices.
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row g-2 g-md-3 mt-3">
+                            <div class="col-12 col-sm-6">
+                                <button type="submit" class="btn btn-success w-100 py-2 py-md-3 shadow-sm fw-medium">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    <span class="d-none d-sm-inline">Create Product</span>
+                                    <span class="d-sm-none">Create</span>
+                                </button>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <a asp-action="Index" class="btn btn-secondary w-100 py-2 py-md-3 shadow-sm fw-medium">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    <span class="d-none d-sm-inline">Back to List</span>
+                                    <span class="d-sm-none">Back</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Progress Indicator -->
+                        <div class="text-center mt-3 d-none" id="loadingIndicator">
+                            <div class="spinner-border spinner-border-sm text-success me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <small class="text-success fw-medium">Creating product...</small>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer with Tips -->
+                <div class="card-footer text-center py-3 py-md-3 d-none d-md-block" 
+                     style="background: linear-gradient(135deg, rgba(75, 113, 71, 0.05) 0%, rgba(87, 133, 83, 0.05) 100%); border-top: 2px solid rgba(75, 113, 71, 0.1);">
+                    <small class="text-success">
+                        <i class="bi bi-lightbulb me-1 text-warning"></i>
+                        <strong>Tip:</strong> Upload a high-quality image and ensure all pricing tiers are logical with bulk discounts for better sales
+                    </small>
+                </div>
+            </div>
+
+            <!-- Mobile Help Card -->
+            <div class="card mt-3 d-md-none shadow-sm border-0">
+                <div class="card-body py-3 px-3" 
+                     style="background: linear-gradient(135deg, rgba(75, 113, 71, 0.05) 0%, rgba(75, 113, 71, 0.1) 100%); border-left: 4px solid #4b7147;">
+                    <small class="d-flex align-items-center text-success">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <span class="fw-medium">Upload a clear product image and set logical pricing tiers</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced form validation with theme colors
+            const forms = document.querySelectorAll('.needs-validation');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Show validation summary if there are errors
+                        const validationSummary = form.querySelector('[asp-validation-summary]');
+                        if (validationSummary) {
+                            validationSummary.classList.remove('d-none');
+                        }
+                        
+                        // Add error styling to invalid fields
+                        const invalidFields = form.querySelectorAll(':invalid');
+                        invalidFields.forEach(field => {
+                            field.style.borderColor = '#CA1929';
+                            field.style.borderWidth = '2px';
+                        });
+                    } else {
+                        // Show loading indicator on valid submission
+                        if (loadingIndicator) {
+                            loadingIndicator.classList.remove('d-none');
+                        }
+                        
+                        // Disable submit button to prevent double submission
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating...';
+                        }
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+            // Image upload functionality
+            const imageFile = document.getElementById('imageFile');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewPlaceholder = document.getElementById('imagePreviewPlaceholder');
+            const removeImageBtn = document.getElementById('removeImageBtn');
+            const uploadImageBtn = document.getElementById('uploadImageBtn');
+            const imageHelpText = document.getElementById('imageHelpText');
+            const imageUrlInput = document.querySelector('input[name="Product.ImageUrl"]');
+
+            // File input change handler
+            if (imageFile) {
+                imageFile.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    
+                    if (file) {
+                        // Validate file type
+                        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                        if (!allowedTypes.includes(file.type)) {
+                            showImageError('Please select a valid image file (JPG, PNG, or GIF)');
+                            return;
+                        }
+                        
+                        // Validate file size (5MB max)
+                        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                        if (file.size > maxSize) {
+                            showImageError('Image file size must be less than 5MB');
+                            return;
+                        }
+                        
+                        // Create file reader for preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            showImagePreview(e.target.result, file.name);
+                        };
+                        reader.readAsDataURL(file);
+                        
+                        // Clear any previous errors
+                        clearImageError();
+                    }
+                });
+
+                // Upload button click handler
+                uploadImageBtn.addEventListener('click', function() {
+                    imageFile.click();
+                });
+
+                // Remove image button handler
+                removeImageBtn.addEventListener('click', function() {
+                    clearImagePreview();
+                });
+
+                // Drag and drop functionality
+                const imageContainer = document.getElementById('imagePreviewContainer');
+                if (imageContainer) {
+                    imageContainer.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.style.borderColor = '#0dcaf0';
+                        this.style.backgroundColor = 'rgba(13, 202, 240, 0.05)';
+                    });
+
+                    imageContainer.addEventListener('dragleave', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                    });
+
+                    imageContainer.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+
+                        const files = e.dataTransfer.files;
+                        if (files.length > 0) {
+                            imageFile.files = files;
+                            imageFile.dispatchEvent(new Event('change'));
+                        }
+                    });
+                }
+            }
+
+            function showImagePreview(src, fileName) {
+                imagePreview.src = src;
+                imagePreview.classList.remove('d-none');
+                imagePreviewPlaceholder.classList.add('d-none');
+                removeImageBtn.classList.remove('d-none');
+                
+                // Update help text
+                imageHelpText.innerHTML = `<i class="bi bi-check-circle me-1 text-success"></i>Image selected: <strong>${fileName}</strong>`;
+                imageHelpText.parentElement.classList.remove('text-info');
+                imageHelpText.parentElement.classList.add('text-success');
+                
+                // Set border styling
+                imageFile.style.borderColor = '#0dcaf0';
+                imageFile.style.backgroundColor = 'rgba(13, 202, 240, 0.05)';
+            }
+
+            function clearImagePreview() {
+                imagePreview.src = '#';
+                imagePreview.classList.add('d-none');
+                imagePreviewPlaceholder.classList.remove('d-none');
+                removeImageBtn.classList.add('d-none');
+                imageFile.value = '';
+                
+                // Reset help text
+                imageHelpText.innerHTML = '<i class="bi bi-info-circle me-1"></i>Choose a product image (JPG, PNG, GIF - Max 5MB)';
+                imageHelpText.parentElement.classList.remove('text-success', 'text-danger');
+                imageHelpText.parentElement.classList.add('text-info');
+                
+                // Reset styling
+                imageFile.style.borderColor = '#0dcaf0';
+                imageFile.style.backgroundColor = '';
+                
+                // Clear hidden field
+                if (imageUrlInput) {
+                    imageUrlInput.value = '';
+                }
+            }
+
+            function showImageError(message) {
+                imageHelpText.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>${message}`;
+                imageHelpText.parentElement.classList.remove('text-info', 'text-success');
+                imageHelpText.parentElement.classList.add('text-danger');
+                
+                imageFile.style.borderColor = '#CA1929';
+                imageFile.style.backgroundColor = 'rgba(202, 25, 41, 0.05)';
+                
+                // Clear the file input
+                imageFile.value = '';
+            }
+
+            function clearImageError() {
+                imageHelpText.parentElement.classList.remove('text-danger');
+                imageHelpText.parentElement.classList.add('text-info');
+                
+                imageFile.style.borderColor = '#0dcaf0';
+                imageFile.style.backgroundColor = '';
+            }
+
+            // Real-time character counter for title field
+            const titleInput = document.querySelector('input[name="Product.Title"]');
+            const titleHelpText = document.getElementById('titleHelpText');
+            if (titleInput && titleHelpText) {
+                const maxLength = titleInput.getAttribute('maxlength');
+                
+                function updateTitleCounter() {
+                    const currentLength = titleInput.value.length;
+                    const remaining = maxLength - currentLength;
+                    
+                    titleHelpText.innerHTML = `Enter the product title (${remaining} characters remaining)`;
+                    
+                    if (remaining < 20) {
+                        titleHelpText.parentElement.classList.remove('text-success');
+                        titleHelpText.parentElement.classList.add('text-warning');
+                        titleInput.style.borderColor = '#BD7418';
+                    } else if (remaining < 10) {
+                        titleHelpText.parentElement.classList.remove('text-success', 'text-warning');
+                        titleHelpText.parentElement.classList.add('text-danger');
+                        titleInput.style.borderColor = '#CA1929';
+                    } else {
+                        titleHelpText.parentElement.classList.remove('text-warning', 'text-danger');
+                        titleHelpText.parentElement.classList.add('text-success');
+                        titleInput.style.borderColor = '#4b7147';
+                    }
+                }
+                
+                titleInput.addEventListener('input', updateTitleCounter);
+                titleInput.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 0.25rem rgba(75, 113, 71, 0.25)';
+                });
+                titleInput.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                });
+                updateTitleCounter(); // Initialize counter
+            }
+
+            // Real-time character counter for description field
+            const descriptionInput = document.querySelector('textarea[name="Product.Description"]');
+            const descriptionHelpText = document.getElementById('descriptionHelpText');
+            if (descriptionInput && descriptionHelpText) {
+                const maxLength = descriptionInput.getAttribute('maxlength');
+                
+                function updateDescriptionCounter() {
+                    const currentLength = descriptionInput.value.length;
+                    const remaining = maxLength - currentLength;
+                    
+                    descriptionHelpText.innerHTML = `Describe the product (${remaining} characters remaining)`;
+                    
+                    if (remaining < 50) {
+                        descriptionHelpText.parentElement.classList.remove('text-success');
+                        descriptionHelpText.parentElement.classList.add('text-warning');
+                        descriptionInput.style.borderColor = '#BD7418';
+                    } else if (remaining < 20) {
+                        descriptionHelpText.parentElement.classList.remove('text-success', 'text-warning');
+                        descriptionHelpText.parentElement.classList.add('text-danger');
+                        descriptionInput.style.borderColor = '#CA1929';
+                    } else {
+                        descriptionHelpText.parentElement.classList.remove('text-warning', 'text-danger');
+                        descriptionHelpText.parentElement.classList.add('text-success');
+                        descriptionInput.style.borderColor = '#4b7147';
+                    }
+                }
+                
+                descriptionInput.addEventListener('input', updateDescriptionCounter);
+                descriptionInput.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 0.25rem rgba(75, 113, 71, 0.25)';
+                });
+                descriptionInput.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                });
+                updateDescriptionCounter(); // Initialize counter
+            }
+
+            // Enhanced category selection styling and validation
+            const categorySelect = document.querySelector('select[name="Product.CategoryId"]');
+            const categoryHelpText = document.getElementById('categoryHelpText');
+            if (categorySelect && categoryHelpText) {
+                categorySelect.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.borderColor = '#4b7147';
+                        this.style.backgroundColor = 'rgba(75, 113, 71, 0.05)';
+                        
+                        // Show selected category feedback
+                        const selectedText = this.options[this.selectedIndex].text;
+                        if (selectedText !== '-- Select Category --') {
+                            categoryHelpText.innerHTML = `<i class="bi bi-check-circle me-1 text-success"></i>Selected category: <strong>${selectedText}</strong>`;
+                        }
+                    } else {
+                        this.style.borderColor = '#4b7147';
+                        this.style.backgroundColor = '';
+                        
+                        // Reset help text
+                        categoryHelpText.innerHTML = '<i class="bi bi-info-circle me-1"></i>Select the category this product belongs to';
+                    }
+                });
+
+                categorySelect.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 0.25rem rgba(75, 113, 71, 0.25)';
+                });
+                
+                categorySelect.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                });
+            }
+
+            // Pricing validation and auto-calculation
+            const priceInputs = document.querySelectorAll('input[type="number"]');
+            priceInputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    const value = parseFloat(this.value);
+                    
+                    if (value <= 0 || value > 10000) {
+                        this.style.borderColor = '#CA1929';
+                        this.style.backgroundColor = 'rgba(202, 25, 41, 0.05)';
+                    } else {
+                        this.style.borderColor = '#BD7418';
+                        this.style.backgroundColor = 'rgba(189, 116, 24, 0.05)';
+                    }
+                });
+
+                input.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 0.25rem rgba(189, 116, 24, 0.25)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                    
+                    // Validate pricing logic
+                    validatePricingTiers();
+                });
+            });
+
+            // Validate pricing tiers logic
+            function validatePricingTiers() {
+                const listPrice = parseFloat(document.querySelector('input[name="Product.ListPrice"]')?.value || 0);
+                const price = parseFloat(document.querySelector('input[name="Product.Price"]')?.value || 0);
+                const price50 = parseFloat(document.querySelector('input[name="Product.Price50"]')?.value || 0);
+                const price100 = parseFloat(document.querySelector('input[name="Product.Price100"]')?.value || 0);
+                
+                // Check if prices decrease with quantity
+                if (price > 0 && price50 > 0 && price50 > price) {
+                    showPriceWarning('Product.Price50', 'Bulk price (50+) should be lower than regular price');
+                }
+                
+                if (price50 > 0 && price100 > 0 && price100 > price50) {
+                    showPriceWarning('Product.Price100', 'Bulk price (100+) should be lower than 50+ price');
+                }
+                
+                if (listPrice > 0 && price > 0 && price > listPrice) {
+                    showPriceWarning('Product.Price', 'Regular price should not exceed list price');
+                }
+            }
+
+            function showPriceWarning(fieldName, message) {
+                const field = document.querySelector(`input[name="${fieldName}"]`);
+                if (field) {
+                    field.style.borderColor = '#BD7418';
+                    field.style.backgroundColor = 'rgba(189, 116, 24, 0.1)';
+                    
+                    // Add temporary tooltip or message
+                    const existingWarning = field.parentElement.querySelector('.price-warning');
+                    if (existingWarning) existingWarning.remove();
+                    
+                    const warning = document.createElement('small');
+                    warning.className = 'price-warning text-warning d-block mt-1';
+                    warning.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>${message}`;
+                    field.parentElement.insertAdjacentElement('afterend', warning);
+                    
+                    setTimeout(() => {
+                        warning?.remove();
+                        if (field.checkValidity()) {
+                            field.style.borderColor = '#BD7418';
+                            field.style.backgroundColor = '';
+                        }
+                    }, 3000);
+                }
+            }
+
+            // Touch-friendly form interactions for mobile
+            if ('ontouchstart' in window) {
+                const formControls = document.querySelectorAll('.form-control, .form-select');
+                formControls.forEach(function(control) {
+                    control.addEventListener('focus', function() {
+                        // Scroll to input on mobile when focused
+                        setTimeout(() => {
+                            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 300);
+                    });
+                });
+            }
+
+            // Enhanced change tracking with visual feedback
+            let changesMade = false;
+            const inputs = document.querySelectorAll('input, textarea, select');
+            const originalValues = {};
+            
+            inputs.forEach(function(input) {
+                originalValues[input.name] = input.value;
+                
+                input.addEventListener('input', function() {
+                    changesMade = (this.value !== originalValues[this.name]);
+                    
+                    // Add visual indicator for changes with theme colors
+                    if (changesMade && this.value !== originalValues[this.name]) {
+                        if (this.type === 'number') {
+                            this.style.borderColor = '#BD7418';
+                        } else if (this.type === 'file') {
+                            this.style.borderColor = '#0dcaf0';
+                        } else {
+                            this.style.borderColor = '#4b7147';
+                        }
+                        this.style.borderWidth = '2px';
+                        if (this.type !== 'file') {
+                            this.style.backgroundColor = 'rgba(75, 113, 71, 0.05)';
+                        }
+                    } else {
+                        if (this.type !== 'file') {
+                            this.style.backgroundColor = '';
+                        }
+                    }
+                });
+            });
+
+            // Warn user about unsaved changes when leaving
+            window.addEventListener('beforeunload', function(e) {
+                if (changesMade) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+
+            // Add success animation on valid input
+            inputs.forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity() && this.value.length > 0) {
+                        if (this.type === 'number') {
+                            this.style.borderColor = '#BD7418';
+                        } else if (this.type === 'file') {
+                            this.style.borderColor = '#0dcaf0';
+                        } else {
+                            this.style.borderColor = '#4b7147';
+                        }
+                        setTimeout(() => {
+                            if (this.value === originalValues[this.name]) {
+                                if (this.type === 'number') {
+                                    this.style.borderColor = '#BD7418';
+                                } else if (this.type === 'file') {
+                                    this.style.borderColor = '#0dcaf0';
+                                } else {
+                                    this.style.borderColor = '#4b7147';
+                                }
+                            }
+                        }, 1000);
+                    }
+                });
+            });
+        });
+    </script>
+}

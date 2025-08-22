@@ -1,0 +1,207 @@
+﻿@model Bulky.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<div class="container-fluid px-2 px-sm-3 py-2 py-md-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-sm border-0">
+                <!-- Card Header -->
+                <div class="card-header bg-primary bg-gradient text-white py-3 py-md-4">
+                    <div class="text-center">
+                        <h1 class="fs-4 fs-md-3 fw-normal mb-1">Create Category</h1>
+                        <p class="mb-0 opacity-75 small d-none d-md-block">Add a new category to the system</p>
+                        <p class="mb-0 opacity-75 small d-md-none">Add new category</p>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-3 p-sm-4 p-md-5">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3 d-none" role="alert"></div>
+                        
+                        <!-- Name Field -->
+                        <div class="mb-3 mb-md-4">
+                            <div class="form-floating">
+                                <input asp-for="Name" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Enter Category Name"
+                                       maxlength="50"
+                                       required />
+                                <label asp-for="Name" class="text-muted">
+                                    <i class="bi bi-tag me-1"></i>Category Name
+                                </label>
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                            <div class="form-text small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Enter a unique name for the category (max 50 characters)
+                            </div>
+                        </div>
+
+                        <!-- Display Order Field -->
+                        <div class="mb-4 mb-md-5">
+                            <div class="form-floating">
+                                <input asp-for="DisplayOrder" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Enter Display Order"
+                                       type="number"
+                                       min="1"
+                                       max="100"
+                                       required />
+                                <label asp-for="DisplayOrder" class="text-muted">
+                                    <i class="bi bi-sort-numeric-up me-1"></i>Display Order
+                                </label>
+                            </div>
+                            <span asp-validation-for="DisplayOrder" class="text-danger small mt-1 d-block"></span>
+                            <div class="form-text small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Set the order for displaying categories (1-100)
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row g-2 g-md-3">
+                            <div class="col-12 col-sm-6">
+                                <button type="submit" class="btn btn-primary w-100 py-2 py-md-3 shadow-sm">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    <span class="d-none d-sm-inline">Create Category</span>
+                                    <span class="d-sm-none">Create</span>
+                                </button>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <a asp-action="Index" class="btn btn-secondary w-100 py-2 py-md-3 shadow-sm">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    <span class="d-none d-sm-inline">Back to List</span>
+                                    <span class="d-sm-none">Back</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Progress Indicator (Hidden by default) -->
+                        <div class="text-center mt-3 d-none" id="loadingIndicator">
+                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <small class="text-muted">Creating category...</small>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer with Tips -->
+                <div class="card-footer bg-light text-center py-2 py-md-3 d-none d-md-block">
+                    <small class="text-muted">
+                        <i class="bi bi-lightbulb me-1"></i>
+                        Tip: Choose descriptive names and logical display orders for better organization
+                    </small>
+                </div>
+            </div>
+
+            <!-- Additional Help Card (Mobile Only) -->
+            <div class="card mt-3 d-md-none">
+                <div class="card-body py-2">
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-lightbulb me-2 text-warning"></i>
+                        Use descriptive names and logical display orders
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced form validation
+            const forms = document.querySelectorAll('.needs-validation');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Show validation summary if there are errors
+                        const validationSummary = form.querySelector('[asp-validation-summary]');
+                        if (validationSummary) {
+                            validationSummary.classList.remove('d-none');
+                        }
+                    } else {
+                        // Show loading indicator on valid submission
+                        if (loadingIndicator) {
+                            loadingIndicator.classList.remove('d-none');
+                        }
+                        
+                        // Disable submit button to prevent double submission
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating...';
+                        }
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+            // Real-time character counter for name field
+            const nameInput = document.querySelector('input[name="Name"]');
+            if (nameInput) {
+                const maxLength = nameInput.getAttribute('maxlength');
+                const formText = nameInput.closest('.mb-3, .mb-md-4').querySelector('.form-text');
+                
+                nameInput.addEventListener('input', function() {
+                    const currentLength = this.value.length;
+                    const remaining = maxLength - currentLength;
+                    
+                    if (formText) {
+                        formText.innerHTML = `<i class="bi bi-info-circle me-1"></i>Enter a unique name for the category (${remaining} characters remaining)`;
+                        
+                        if (remaining < 10) {
+                            formText.classList.add('text-warning');
+                        } else {
+                            formText.classList.remove('text-warning');
+                        }
+                    }
+                });
+            }
+
+            // Display Order validation
+            const orderInput = document.querySelector('input[name="DisplayOrder"]');
+            if (orderInput) {
+                orderInput.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    const formText = this.closest('.mb-4, .mb-md-5').querySelector('.form-text');
+                    
+                    if (formText) {
+                        if (value < 1 || value > 100) {
+                            formText.innerHTML = '<i class="bi bi-exclamation-triangle me-1 text-warning"></i>Please enter a value between 1 and 100';
+                            formText.classList.add('text-warning');
+                        } else {
+                            formText.innerHTML = '<i class="bi bi-info-circle me-1"></i>Set the order for displaying categories (1-100)';
+                            formText.classList.remove('text-warning');
+                        }
+                    }
+                });
+            }
+
+            // Touch-friendly form interactions for mobile
+            if ('ontouchstart' in window) {
+                const formControls = document.querySelectorAll('.form-control');
+                formControls.forEach(function(control) {
+                    control.addEventListener('focus', function() {
+                        // Scroll to input on mobile when focused
+                        setTimeout(() => {
+                            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 300);
+                    });
+                });
+            }
+        });
+    </script>
+}

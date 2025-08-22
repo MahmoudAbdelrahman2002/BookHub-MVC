@@ -1,0 +1,461 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login - BulkyWeb";
+}
+
+<!-- Login Hero Section -->
+<section class="login-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%230d6efd\">🔐</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%230d6efd\">📚</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <!-- Page Header -->
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold text-primary mb-3" style="font-family: 'Georgia', serif;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Welcome Back
+                    </h1>
+                    <p class="lead text-muted">Sign in to access your literary collection</p>
+                    <div class="decorative-line mx-auto" style="width: 80px; height: 3px; background: linear-gradient(to right, #0d6efd, #198754); border-radius: 3px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Login Section -->
+<section class="login-form py-4 py-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <div class="row g-4 g-lg-5">
+                    <!-- Login Form -->
+                    <div class="col-12 col-lg-7">
+                        <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                            <!-- Card Header -->
+                            <div class="card-header bg-primary text-white py-4" style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;">
+                                <h2 class="card-title mb-0 fw-bold">
+                                    <i class="bi bi-person-check me-2"></i>Sign In
+                                </h2>
+                                <p class="mb-0 opacity-90">Access your BulkyWeb account</p>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4 p-md-5">
+                                <form id="account" method="post" class="needs-validation" novalidate>
+                                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-3" role="alert"></div>
+                                    
+                                    <!-- Email Field -->
+                                    <div class="form-floating mb-4">
+                                        <input asp-for="Input.Email" class="form-control form-control-lg border-primary" 
+                                               autocomplete="username" aria-required="true" placeholder="name@example.com" 
+                                               style="border-width: 2px;" />
+                                        <label asp-for="Input.Email" class="text-primary fw-medium">
+                                            <i class="bi bi-envelope me-1"></i>Email Address
+                                        </label>
+                                        <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+
+                                    <!-- Password Field -->
+                                    <div class="form-floating mb-4">
+                                        <input asp-for="Input.Password" class="form-control form-control-lg border-warning" 
+                                               autocomplete="current-password" aria-required="true" placeholder="password" 
+                                               type="password" style="border-width: 2px;" />
+                                        <label asp-for="Input.Password" class="text-warning fw-medium">
+                                            <i class="bi bi-lock me-1"></i>Password
+                                        </label>
+                                        <span asp-validation-for="Input.Password" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+
+                                    <!-- Remember Me -->
+                                    <div class="form-check mb-4 p-3 rounded" style="background: rgba(13, 110, 253, 0.05);">
+                                        <input class="form-check-input" asp-for="Input.RememberMe" type="checkbox" style="border-width: 2px;">
+                                        <label class="form-check-label text-primary fw-medium" asp-for="Input.RememberMe">
+                                            <i class="bi bi-clock-history me-1"></i>Remember me on this device
+                                        </label>
+                                        <div class="form-text small text-primary">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Stay signed in for faster access
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="d-grid gap-2 mb-4">
+                                        <button id="login-submit" type="submit" class="btn btn-primary btn-lg fw-bold py-3 shadow-lg" 
+                                                style="border-radius: 12px; background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+                                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                                            <span id="loginButtonText">Sign In</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Account Links -->
+                                    <div class="row g-2 text-center">
+                                        <div class="col-12 col-sm-4">
+                                            <a asp-page="./ForgotPassword" class="btn btn-outline-secondary btn-sm w-100" style="border-radius: 8px;">
+                                                <i class="bi bi-question-circle me-1"></i>Forgot Password?
+                                            </a>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-success btn-sm w-100" style="border-radius: 8px;">
+                                                <i class="bi bi-person-plus me-1"></i>Create Account
+                                            </a>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <a asp-page="./ResendEmailConfirmation" class="btn btn-outline-info btn-sm w-100" style="border-radius: 8px;">
+                                                <i class="bi bi-envelope-check me-1"></i>Resend Email
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information Panel -->
+                    <div class="col-12 col-lg-5">
+                        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            <!-- External Logins -->
+                            <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                                <div class="card-header bg-light border-0 py-3">
+                                    <h5 class="card-title mb-0 text-info fw-bold">
+                                        <i class="bi bi-globe me-2"></i>Quick Sign In
+                                    </h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <p class="text-muted mb-3">Use your existing account to sign in:</p>
+                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                        <div class="d-grid gap-2">
+                                            @foreach (var provider in Model.ExternalLogins!)
+                                            {
+                                                <button type="submit" class="btn btn-outline-primary fw-medium py-2" 
+                                                        name="provider" value="@provider.Name" 
+                                                        title="Sign in using your @provider.DisplayName account"
+                                                        style="border-radius: 8px;">
+                                                    <i class="bi bi-@provider.Name.ToLower() me-2"></i>@provider.DisplayName
+                                                </button>
+                                            }
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Security Information -->
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 text-success fw-bold">
+                                    <i class="bi bi-shield-check me-2"></i>Account Security
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="security-features">
+                                    <div class="security-item d-flex align-items-start mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                                        <div>
+                                            <strong>Secure Authentication</strong>
+                                            <p class="text-muted small mb-0">Your login is protected with advanced encryption</p>
+                                        </div>
+                                    </div>
+                                    <div class="security-item d-flex align-items-start mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                                        <div>
+                                            <strong>Data Protection</strong>
+                                            <p class="text-muted small mb-0">Personal information is safely encrypted</p>
+                                        </div>
+                                    </div>
+                                    <div class="security-item d-flex align-items-start mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                                        <div>
+                                            <strong>Session Management</strong>
+                                            <p class="text-muted small mb-0">Automatic logout for inactive sessions</p>
+                                        </div>
+                                    </div>
+                                    <div class="security-item d-flex align-items-start">
+                                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                                        <div>
+                                            <strong>Account Recovery</strong>
+                                            <p class="text-muted small mb-0">Easy password reset via secure email</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Welcome Back Card -->
+                        <div class="card border-0 shadow-sm" style="border-radius: 12px; background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+                            <div class="card-body p-4 text-white text-center">
+                                <i class="bi bi-book-half display-4 mb-3 opacity-75"></i>
+                                <h5 class="fw-bold mb-2">Welcome Back to BulkyWeb!</h5>
+                                <p class="mb-3 opacity-90">Continue your literary journey with us</p>
+                                <div class="row g-2 text-center">
+                                    <div class="col-6">
+                                        <div class="bg-white bg-opacity-10 rounded p-2">
+                                            <i class="bi bi-collection"></i>
+                                            <small class="d-block">Browse Books</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="bg-white bg-opacity-10 rounded p-2">
+                                            <i class="bi bi-heart"></i>
+                                            <small class="d-block">Your Favorites</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLoginForm();
+            initializeFormValidation();
+            initializeSecurityFeatures();
+        });
+
+        function initializeLoginForm() {
+            const form = document.getElementById('account');
+            const submitButton = document.getElementById('login-submit');
+            const buttonText = document.getElementById('loginButtonText');
+
+            if (form && submitButton) {
+                form.addEventListener('submit', function() {
+                    submitButton.disabled = true;
+                    buttonText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Signing In...';
+                    submitButton.classList.add('btn-secondary');
+                    submitButton.classList.remove('btn-primary');
+                });
+            }
+        }
+
+        function initializeFormValidation() {
+            const form = document.querySelector('.needs-validation');
+            
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Add error styling to invalid fields
+                        const invalidFields = form.querySelectorAll(':invalid');
+                        invalidFields.forEach(field => {
+                            field.style.borderColor = '#dc3545';
+                            field.style.borderWidth = '2px';
+                        });
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            }
+
+            // Real-time validation feedback
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    } else if (this.value.length > 0) {
+                        this.style.borderColor = '#dc3545';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    }
+                });
+            });
+        }
+
+        function initializeSecurityFeatures() {
+            // Animate security features on scroll
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateX(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const securityItems = document.querySelectorAll('.security-item');
+                securityItems.forEach((item, index) => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(-20px)';
+                    item.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                    observer.observe(item);
+                });
+            }
+
+            // Enhanced password field interaction
+            const passwordInput = document.querySelector('input[type="password"]');
+            if (passwordInput) {
+                passwordInput.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                    this.parentElement.style.transition = 'transform 0.2s ease';
+                });
+
+                passwordInput.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            }
+        }
+
+        // Enhanced mobile interactions
+        if ('ontouchstart' in window) {
+            const interactiveElements = document.querySelectorAll('.btn, .card, .security-item');
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                element.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                // Ctrl+Enter submits the form
+                const submitButton = document.getElementById('login-submit');
+                if (submitButton) {
+                    submitButton.click();
+                }
+            }
+        });
+
+        // Auto-focus email field
+        window.addEventListener('load', function() {
+            const emailInput = document.querySelector('input[type="email"]');
+            if (emailInput && !emailInput.value) {
+                emailInput.focus();
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Login Form Styling */
+    .login-hero {
+        min-height: 40vh;
+    }
+
+    .form-floating > label {
+        font-family: 'Georgia', serif;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+
+    .security-item {
+        transition: all 0.2s ease;
+    }
+
+    .security-item:hover {
+        transform: translateX(3px);
+    }
+
+    /* Enhanced button styling */
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .login-hero {
+            min-height: 30vh;
+            padding: 2rem 0 !important;
+        }
+        
+        .display-5 {
+            font-size: 2rem !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-5 {
+            font-size: 1.75rem !important;
+        }
+        
+        .security-item {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Loading state styling */
+    .btn:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+
+    /* Custom validation styling */
+    .was-validated .form-control:valid {
+        border-color: #198754;
+        background-image: none;
+    }
+
+    .was-validated .form-control:invalid {
+        border-color: #dc3545;
+        background-image: none;
+    }
+
+    /* Welcome back card animation */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    /* Form field enhancements */
+    .form-floating {
+        position: relative;
+    }
+
+    .form-floating:hover {
+        z-index: 2;
+    }
+
+    /* Custom checkbox styling */
+    .form-check-input {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>

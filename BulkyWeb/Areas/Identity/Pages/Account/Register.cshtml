@@ -1,0 +1,887 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register - BulkyWeb";
+}
+
+<!-- Registration Hero Section -->
+<section class="registration-hero py-4 py-md-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%); position: relative; overflow: hidden;">
+    <!-- Decorative Background -->
+    <div class="position-absolute w-100 h-100" style="top: 0; left: 0; opacity: 0.05; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\"30\" font-size=\"25\" fill=\"%230d6efd\">👤</text><text x=\"60\" y=\"70\" font-size=\"20\" fill=\"%230d6efd\">📝</text></svg>'); background-size: 120px 120px;"></div>
+    
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <!-- Page Header -->
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold text-primary mb-3" style="font-family: 'Georgia', serif;">
+                        <i class="bi bi-person-plus me-2"></i>Join BulkyWeb
+                    </h1>
+                    <p class="lead text-muted">Create your account and start exploring our literary collection</p>
+                    <div class="decorative-line mx-auto" style="width: 80px; height: 3px; background: linear-gradient(to right, #0d6efd, #198754); border-radius: 3px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Registration Section -->
+<section class="registration-form py-4 py-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-11 col-xl-10">
+                <div class="row g-4 g-lg-5">
+                    <!-- Registration Form -->
+                    <div class="col-12 col-lg-8">
+                        <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                            <!-- Card Header -->
+                            <div class="card-header bg-primary text-white py-4" style="border-radius: 15px 15px 0 0; background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;">
+                                <h2 class="card-title mb-0 fw-bold">
+                                    <i class="bi bi-pencil-square me-2"></i>Create New Account
+                                </h2>
+                                <p class="mb-0 opacity-90">Fill in your details to get started</p>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4 p-md-5">
+                                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="needs-validation" novalidate>
+                                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-3" role="alert"></div>
+                                    
+                                    <!-- Progress Steps -->
+                                    <div class="progress-steps mb-5">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="step-indicator active" data-step="1">
+                                                <span class="step-number">1</span>
+                                                <span class="step-label d-none d-md-inline">Account</span>
+                                            </div>
+                                            <div class="step-line"></div>
+                                            <div class="step-indicator" data-step="2">
+                                                <span class="step-number">2</span>
+                                                <span class="step-label d-none d-md-inline">Personal</span>
+                                            </div>
+                                            <div class="step-line"></div>
+                                            <div class="step-indicator" data-step="3">
+                                                <span class="step-number">3</span>
+                                                <span class="step-label d-none d-md-inline">Address</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 1: Account Information -->
+                                    <div class="form-step" id="step1">
+                                        <h4 class="step-title mb-4">
+                                            <i class="bi bi-person-circle me-2 text-primary"></i>Account Information
+                                        </h4>
+
+                                        <!-- Email Field -->
+                                        <div class="form-floating mb-4">
+                                            <input asp-for="Input.Email" class="form-control form-control-lg border-primary" 
+                                                   autocomplete="username" aria-required="true" placeholder="name@example.com" 
+                                                   style="border-width: 2px;" />
+                                            <label asp-for="Input.Email" class="text-primary fw-medium">
+                                                <i class="bi bi-envelope me-1"></i>Email Address
+                                            </label>
+                                            <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
+                                            <div class="form-text small text-primary mt-2">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                We'll use this email to send you important updates
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden Role Field (automatically set to Customer) -->
+                                        <input asp-for="Input.Role" type="hidden" />
+
+                                        <!-- Account Type Info -->
+                                        <div class="alert alert-info border-0 rounded-3 mb-4" role="alert">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <i class="bi bi-person-circle text-info" style="font-size: 2rem;"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="alert-heading fw-bold mb-1">Customer Account Registration</h6>
+                                                    <p class="mb-0 small">You're creating a <strong>Customer</strong> account with full access to browse and purchase from our book collection.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Password Field -->
+                                        <div class="form-floating mb-4 position-relative">
+                                            <input asp-for="Input.Password" class="form-control form-control-lg border-warning" 
+                                                   autocomplete="new-password" aria-required="true" placeholder="password" 
+                                                   type="password" style="border-width: 2px;" id="passwordInput" />
+                                            <label asp-for="Input.Password" class="text-warning fw-medium">
+                                                <i class="bi bi-lock me-1"></i>Password
+                                            </label>
+                                            <button type="button" class="btn btn-sm position-absolute" 
+                                                    style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; border: none; background: none;"
+                                                    onclick="togglePassword('passwordInput', this)">
+                                                <i class="bi bi-eye text-muted"></i>
+                                            </button>
+                                            <span asp-validation-for="Input.Password" class="text-danger small mt-1 d-block"></span>
+                                            
+                                            <!-- Password Strength Indicator -->
+                                            <div class="password-strength mt-2">
+                                                <div class="progress" style="height: 4px;">
+                                                    <div class="progress-bar" id="passwordStrengthBar" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                                <small id="passwordStrengthText" class="text-muted">Enter a password to see strength</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Confirm Password Field -->
+                                        <div class="form-floating mb-4 position-relative">
+                                            <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg border-warning" 
+                                                   autocomplete="new-password" aria-required="true" placeholder="confirm password" 
+                                                   type="password" style="border-width: 2px;" id="confirmPasswordInput" />
+                                            <label asp-for="Input.ConfirmPassword" class="text-warning fw-medium">
+                                                <i class="bi bi-shield-check me-1"></i>Confirm Password
+                                            </label>
+                                            <button type="button" class="btn btn-sm position-absolute" 
+                                                    style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; border: none; background: none;"
+                                                    onclick="togglePassword('confirmPasswordInput', this)">
+                                                <i class="bi bi-eye text-muted"></i>
+                                            </button>
+                                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small mt-1 d-block"></span>
+                                            
+                                            <!-- Password Match Indicator -->
+                                            <div class="password-match mt-2" id="passwordMatch" style="display: none;">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                    Passwords match
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-primary btn-lg" onclick="nextStep(2)">
+                                                Next <i class="bi bi-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: Personal Information -->
+                                    <div class="form-step d-none" id="step2">
+                                        <h4 class="step-title mb-4">
+                                            <i class="bi bi-person-fill me-2 text-info"></i>Personal Information
+                                        </h4>
+
+                                        <!-- Full Name -->
+                                        <div class="form-floating mb-4">
+                                            <input asp-for="Input.Name" class="form-control form-control-lg border-info" 
+                                                   placeholder="Full Name" required style="border-width: 2px;" />
+                                            <label asp-for="Input.Name" class="text-info fw-medium">
+                                                <i class="bi bi-person me-1"></i>Full Name
+                                            </label>
+                                            <span asp-validation-for="Input.Name" class="text-danger small mt-1 d-block"></span>
+                                            <div class="form-text small text-info mt-2">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Enter your full name as it appears on official documents
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="btn btn-secondary btn-lg" onclick="prevStep(1)">
+                                                <i class="bi bi-arrow-left me-1"></i> Previous
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-lg" onclick="nextStep(3)">
+                                                Next <i class="bi bi-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3: Address Information -->
+                                    <div class="form-step d-none" id="step3">
+                                        <h4 class="step-title mb-4">
+                                            <i class="bi bi-geo-alt-fill me-2 text-warning"></i>Address Information
+                                            <small class="text-muted d-block mt-1">Optional - for shipping and billing</small>
+                                        </h4>
+
+                                        <!-- Street Address -->
+                                        <div class="form-floating mb-4">
+                                            <input asp-for="Input.StreetAddress" class="form-control form-control-lg border-secondary" 
+                                                   placeholder="Street Address" style="border-width: 2px;" />
+                                            <label asp-for="Input.StreetAddress" class="text-secondary fw-medium">
+                                                <i class="bi bi-house me-1"></i>Street Address
+                                            </label>
+                                            <span asp-validation-for="Input.StreetAddress" class="text-danger small mt-1 d-block"></span>
+                                        </div>
+
+                                        <!-- City, State, Postal Code Row -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="Input.City" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="City" style="border-width: 2px;" />
+                                                    <label asp-for="Input.City" class="text-secondary fw-medium">
+                                                        <i class="bi bi-building me-1"></i>City
+                                                    </label>
+                                                    <span asp-validation-for="Input.City" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating">
+                                                    <input asp-for="Input.State" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="State" style="border-width: 2px;" />
+                                                    <label asp-for="Input.State" class="text-secondary fw-medium">
+                                                        <i class="bi bi-map me-1"></i>State
+                                                    </label>
+                                                    <span asp-validation-for="Input.State" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating">
+                                                    <input asp-for="Input.PostalCode" class="form-control form-control-lg border-secondary" 
+                                                           placeholder="Postal Code" style="border-width: 2px;" />
+                                                    <label asp-for="Input.PostalCode" class="text-secondary fw-medium">
+                                                        <i class="bi bi-mailbox me-1"></i>Postal Code
+                                                    </label>
+                                                    <span asp-validation-for="Input.PostalCode" class="text-danger small mt-1 d-block"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Terms and Conditions -->
+                                        <div class="form-check mb-4 p-3 rounded" style="background: rgba(13, 110, 253, 0.05);">
+                                            <input class="form-check-input" type="checkbox" id="termsCheck" required style="border-width: 2px;">
+                                            <label class="form-check-label text-primary fw-medium" for="termsCheck">
+                                                <i class="bi bi-shield-check me-1"></i>I agree to the 
+                                                <a href="#" class="text-primary text-decoration-none fw-bold">Terms of Service</a> 
+                                                and 
+                                                <a href="#" class="text-primary text-decoration-none fw-bold">Privacy Policy</a>
+                                            </label>
+                                            <div class="form-text small text-primary">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Required to create your BulkyWeb account
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="btn btn-secondary btn-lg" onclick="prevStep(2)">
+                                                <i class="bi bi-arrow-left me-1"></i> Previous
+                                            </button>
+                                            
+                                            <!-- Submit Button -->
+                                            <button id="registerSubmit" type="submit" class="btn btn-success btn-lg fw-bold px-4 shadow-lg" 
+                                                    style="border-radius: 12px;">
+                                                <i class="bi bi-person-plus-fill me-2"></i>
+                                                <span id="registerButtonText">Create Account</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Already have account -->
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted mb-0">
+                                            Already have an account? 
+                                            <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Model.ReturnUrl" 
+                                               class="text-primary fw-medium text-decoration-none">
+                                                Sign in here
+                                            </a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information Panel -->
+                    <div class="col-12 col-lg-4">
+                        <!-- Account Information -->
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 text-success fw-bold">
+                                    <i class="bi bi-info-circle me-2"></i>Customer Account Benefits
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="benefits-info">
+                                    <div class="benefit-item mb-3 p-3 rounded" style="background: rgba(13, 110, 253, 0.05); border-left: 4px solid #0d6efd;">
+                                        <h6 class="fw-bold text-primary mb-1">
+                                            <i class="bi bi-book me-1"></i>Full Catalog Access
+                                        </h6>
+                                        <small class="text-muted">Browse our complete collection of books and publications</small>
+                                    </div>
+                                    <div class="benefit-item mb-3 p-3 rounded" style="background: rgba(25, 135, 84, 0.05); border-left: 4px solid #198754;">
+                                        <h6 class="fw-bold text-success mb-1">
+                                            <i class="bi bi-cart me-1"></i>Easy Ordering
+                                        </h6>
+                                        <small class="text-muted">Simple and secure checkout process for all purchases</small>
+                                    </div>
+                                    <div class="benefit-item mb-3 p-3 rounded" style="background: rgba(255, 193, 7, 0.05); border-left: 4px solid #ffc107;">
+                                        <h6 class="fw-bold text-warning mb-1">
+                                            <i class="bi bi-truck me-1"></i>Order Tracking
+                                        </h6>
+                                        <small class="text-muted">Track your orders from purchase to delivery</small>
+                                    </div>
+                                    <div class="benefit-item p-3 rounded" style="background: rgba(220, 53, 69, 0.05); border-left: 4px solid #dc3545;">
+                                        <h6 class="fw-bold text-danger mb-1">
+                                            <i class="bi bi-person-gear me-1"></i>Profile Management
+                                        </h6>
+                                        <small class="text-muted">Manage your personal information and preferences</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            <!-- External Logins -->
+                            <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                                <div class="card-header bg-light border-0 py-3">
+                                    <h5 class="card-title mb-0 text-info fw-bold">
+                                        <i class="bi bi-globe me-2"></i>Quick Registration
+                                    </h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <p class="text-muted mb-3">Register quickly using your existing account:</p>
+                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                        <div class="d-grid gap-2">
+                                            @foreach (var provider in Model.ExternalLogins!)
+                                            {
+                                                <button type="submit" class="btn btn-outline-primary fw-medium py-2" 
+                                                        name="provider" value="@provider.Name" 
+                                                        title="Register using your @provider.DisplayName account"
+                                                        style="border-radius: 8px;">
+                                                    <i class="bi bi-@provider.Name.ToLower() me-2"></i>@provider.DisplayName
+                                                </button>
+                                            }
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Registration Guide -->
+                        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 text-info fw-bold">
+                                    <i class="bi bi-list-check me-2"></i>Registration Steps
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="registration-guide">
+                                    <div class="guide-step d-flex align-items-start mb-3" id="guide-step-1">
+                                        <div class="guide-number me-3">
+                                            <span class="badge bg-primary">1</span>
+                                        </div>
+                                        <div>
+                                            <strong>Account Setup</strong>
+                                            <p class="text-muted small mb-0">Choose email, role and secure password</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step d-flex align-items-start mb-3" id="guide-step-2">
+                                        <div class="guide-number me-3">
+                                            <span class="badge bg-secondary">2</span>
+                                        </div>
+                                        <div>
+                                            <strong>Personal Details</strong>
+                                            <p class="text-muted small mb-0">Provide your full name for personalization</p>
+                                        </div>
+                                    </div>
+                                    <div class="guide-step d-flex align-items-start" id="guide-step-3">
+                                        <div class="guide-number me-3">
+                                            <span class="badge bg-secondary">3</span>
+                                        </div>
+                                        <div>
+                                            <strong>Address Information</strong>
+                                            <p class="text-muted small mb-0">Optional shipping and billing details</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let currentStep = 1;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRegistrationForm();
+            initializeFormValidation();
+            initializePasswordFeatures();
+            initializeStepGuide();
+        });
+
+        function initializeRegistrationForm() {
+            const form = document.getElementById('registerForm');
+            const submitButton = document.getElementById('registerSubmit');
+            const buttonText = document.getElementById('registerButtonText');
+
+            if (form && submitButton) {
+                form.addEventListener('submit', function() {
+                    submitButton.disabled = true;
+                    buttonText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating Account...';
+                    submitButton.classList.add('btn-secondary');
+                    submitButton.classList.remove('btn-success');
+                });
+            }
+        }
+
+        function initializeFormValidation() {
+            const form = document.querySelector('.needs-validation');
+            
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Add error styling to invalid fields
+                        const invalidFields = form.querySelectorAll(':invalid');
+                        invalidFields.forEach(field => {
+                            field.style.borderColor = '#dc3545';
+                            field.style.borderWidth = '2px';
+                        });
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            }
+
+            // Real-time validation feedback
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    } else if (this.value.length > 0) {
+                        this.style.borderColor = '#dc3545';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = '#198754';
+                    }
+                });
+            });
+        }
+
+        function initializePasswordFeatures() {
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const strengthText = document.getElementById('passwordStrengthText');
+            const passwordMatch = document.getElementById('passwordMatch');
+
+            // Password strength checker
+            if (passwordInput && strengthBar && strengthText) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    const strength = calculatePasswordStrength(password);
+                    updatePasswordStrength(strength, strengthBar, strengthText);
+                });
+            }
+
+            // Password match checker
+            if (confirmPasswordInput && passwordMatch) {
+                confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+                passwordInput.addEventListener('input', checkPasswordMatch);
+
+                function checkPasswordMatch() {
+                    if (confirmPasswordInput.value && passwordInput.value === confirmPasswordInput.value) {
+                        passwordMatch.style.display = 'block';
+                        confirmPasswordInput.style.borderColor = '#198754';
+                    } else {
+                        passwordMatch.style.display = 'none';
+                        if (confirmPasswordInput.value) {
+                            confirmPasswordInput.style.borderColor = '#dc3545';
+                        }
+                    }
+                }
+            }
+        }
+
+        function initializeStepGuide() {
+            updateStepGuide(currentStep);
+        }
+
+        function nextStep(step) {
+            if (validateCurrentStep()) {
+                document.getElementById(`step${currentStep}`).classList.add('d-none');
+                document.getElementById(`step${step}`).classList.remove('d-none');
+                updateStepIndicators(step);
+                updateStepGuide(step);
+                currentStep = step;
+                
+                // Scroll to top of form
+                document.getElementById('registerForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).classList.add('d-none');
+            document.getElementById(`step${step}`).classList.remove('d-none');
+            updateStepIndicators(step);
+            updateStepGuide(step);
+            currentStep = step;
+            
+            // Scroll to top of form
+            document.getElementById('registerForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function validateCurrentStep() {
+            const currentStepElement = document.getElementById(`step${currentStep}`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    field.style.borderWidth = '2px';
+                    isValid = false;
+                    
+                    // Show specific error for company selection
+                    if (field.id === 'companySelect') {
+                        showNotification('Please select a company for your Company account', 'danger');
+                    }
+                } else {
+                    field.style.borderColor = '#198754';
+                }
+            });
+
+            return isValid;
+        }
+
+        function updateStepIndicators(activeStep) {
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                const stepNum = index + 1;
+                if (stepNum <= activeStep) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        function updateStepGuide(activeStep) {
+            document.querySelectorAll('.guide-step').forEach((step, index) => {
+                const stepNum = index + 1;
+                const badge = step.querySelector('.badge');
+                
+                if (stepNum === activeStep) {
+                    badge.className = 'badge bg-primary';
+                    step.style.opacity = '1';
+                } else if (stepNum < activeStep) {
+                    badge.className = 'badge bg-success';
+                    step.style.opacity = '0.7';
+                } else {
+                    badge.className = 'badge bg-secondary';
+                    step.style.opacity = '0.5';
+                }
+            });
+        }
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]/)) strength += 25;
+            if (password.match(/[A-Z]/)) strength += 25;
+            if (password.match(/[0-9]/)) strength += 15;
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 10;
+            
+            return Math.min(strength, 100);
+        }
+
+        function updatePasswordStrength(strength, bar, text) {
+            bar.style.width = strength + '%';
+            
+            if (strength < 25) {
+                bar.className = 'progress-bar bg-danger';
+                text.textContent = 'Weak password';
+                text.className = 'text-danger small';
+            } else if (strength < 50) {
+                bar.className = 'progress-bar bg-warning';
+                text.textContent = 'Fair password';
+                text.className = 'text-warning small';
+            } else if (strength < 75) {
+                bar.className = 'progress-bar bg-info';
+                text.textContent = 'Good password';
+                text.className = 'text-info small';
+            } else {
+                bar.className = 'progress-bar bg-success';
+                text.textContent = 'Strong password';
+                text.className = 'text-success small';
+            }
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash text-muted';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye text-muted';
+            }
+        }
+
+        function showNotification(message, type) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+            toast.style.borderRadius = '10px';
+            toast.innerHTML = `
+                <i class="bi bi-info-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+
+        // Enhanced mobile interactions
+        if ('ontouchstart' in window) {
+            const interactiveElements = document.querySelectorAll('.btn, .card, .role-item');
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                element.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+    </script>
+}
+
+<style>
+    /* Registration Form Styling */
+    .registration-hero {
+        min-height: 40vh;
+    }
+
+    .form-floating > label {
+        font-family: 'Georgia', serif;
+        font-weight: 500;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+
+    /* Step Progress Styling */
+    .progress-steps {
+        position: relative;
+    }
+
+    .step-indicator {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .step-indicator.active {
+        background: #0d6efd;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .step-indicator .step-number {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .step-indicator .step-label {
+        font-size: 0.7rem;
+        margin-top: 2px;
+    }
+
+    .step-line {
+        flex: 1;
+        height: 2px;
+        background: #e9ecef;
+        margin: 0 10px;
+    }
+
+    .step-indicator.active ~ .step-line {
+        background: #0d6efd;
+    }
+
+    /* Form Steps */
+    .form-step {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .step-title {
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+    }
+
+    /* Company Selection Styling */
+    .company-details {
+        transition: all 0.3s ease;
+    }
+
+    .company-guide .guide-item {
+        transition: all 0.3s ease;
+    }
+
+    .company-guide .guide-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Animation keyframes */
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .role-item {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .role-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Guide Steps */
+    .guide-step {
+        transition: all 0.3s ease;
+    }
+
+    .guide-number .badge {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    /* Password strength styling */
+    .password-strength .progress {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .password-strength .progress-bar {
+        transition: all 0.3s ease;
+    }
+
+    /* Enhanced form controls */
+    .form-floating {
+        position: relative;
+    }
+
+    .form-floating .btn {
+        z-index: 5;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .registration-hero {
+            min-height: 30vh;
+            padding: 2rem 0 !important;
+        }
+        
+        .display-5 {
+            font-size: 2rem !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+
+        .step-indicator {
+            width: 45px;
+            height: 45px;
+        }
+
+        .step-indicator .step-number {
+            font-size: 1rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .display-5 {
+            font-size: 1.75rem !important;
+        }
+        
+        .role-item {
+            font-size: 0.9rem;
+        }
+
+        .step-line {
+            margin: 0 5px;
+        }
+    }
+
+    /* Loading state styling */
+    .btn:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+
+    /* Custom validation styling */
+    .was-validated .form-control:valid,
+    .was-validated .form-select:valid {
+        border-color: #198754;
+        background-image: none;
+    }
+
+    .was-validated .form-control:invalid,
+    .was-validated .form-select:invalid {
+        border-color: #dc3545;
+        background-image: none;
+    }
+
+    /* Enhanced checkbox styling */
+    .form-check-input {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+</style>

@@ -1,0 +1,209 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
+<hr />
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<p id="external-login-description" class="text-info">
+    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+    Please enter your information below and click the Register button to finish
+    logging in.
+</p>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            
+            <!-- Email Field -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email." />
+                <label asp-for="Input.Email" class="form-label"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <!-- Full Name Field -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Name" class="form-control" autocomplete="name" placeholder="Please enter your full name." />
+                <label asp-for="Input.Name" class="form-label"></label>
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="tel" placeholder="Phone Number (optional)" />
+                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Address Information Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Address Information (Optional)</h6>
+                    <small class="text-muted">This information can be filled out later in your profile</small>
+                </div>
+                <div class="card-body">
+                    <!-- Street Address -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.StreetAddress" class="form-control" autocomplete="street-address" placeholder="Street Address" />
+                        <label asp-for="Input.StreetAddress" class="form-label"></label>
+                        <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>
+                    </div>
+
+                    <!-- City, State, Postal Code Row -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <input asp-for="Input.City" class="form-control" autocomplete="address-level2" placeholder="City" />
+                                <label asp-for="Input.City" class="form-label"></label>
+                                <span asp-validation-for="Input.City" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="form-floating">
+                                <input asp-for="Input.State" class="form-control" autocomplete="address-level1" placeholder="State" />
+                                <label asp-for="Input.State" class="form-label"></label>
+                                <span asp-validation-for="Input.State" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="form-floating">
+                                <input asp-for="Input.PostalCode" class="form-control" autocomplete="postal-code" placeholder="Postal Code" />
+                                <label asp-for="Input.PostalCode" class="form-label"></label>
+                                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-lg btn-primary">
+                    <i class="bi bi-person-plus me-2"></i>Complete Registration
+                </button>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="mt-4 text-center">
+                <small class="text-muted">
+                    By registering, you will be assigned the Customer role. You can update your information anytime in your profile.
+                </small>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Information Panel -->
+    <div class="col-md-4 col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-info-circle me-2"></i>Registration Information</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        Your account will be created automatically
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        You'll be assigned the Customer role by default
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        Address information is optional and can be added later
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        You can update your profile information anytime
+                    </li>
+                </ul>
+                
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <i class="bi bi-shield-check me-1"></i>
+                        Your information is secure and will only be used for order processing and account management.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <!-- Optional: Auto-format postal code and enhance UX -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-focus on first empty required field
+            const requiredFields = document.querySelectorAll('input[required]');
+            const firstEmptyRequired = Array.from(requiredFields).find(field => !field.value.trim());
+            if (firstEmptyRequired) {
+                firstEmptyRequired.focus();
+            }
+
+            // Phone number formatting
+            const phoneInput = document.getElementById('Input_PhoneNumber');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                    if (value.length >= 6) {
+                        // US phone format: (XXX) XXX-XXXX
+                        value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                    } else if (value.length >= 3) {
+                        value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Postal code formatting
+            const postalCodeInput = document.getElementById('Input_PostalCode');
+            if (postalCodeInput) {
+                postalCodeInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                    if (value.length >= 5) {
+                        // Basic US ZIP format (can be enhanced for other countries)
+                        value = value.slice(0, 5) + (value.length > 5 ? '-' + value.slice(5, 9) : '');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Add visual feedback for optional vs required fields
+            const allInputs = document.querySelectorAll('input');
+            allInputs.forEach(field => {
+                if (!field.hasAttribute('required')) {
+                    const label = field.nextElementSibling;
+                    if (label && label.tagName === 'LABEL') {
+                        label.innerHTML += ' <small class="text-muted">(optional)</small>';
+                    }
+                }
+            });
+
+            // Enhanced form validation feedback
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const invalidFields = form.querySelectorAll(':invalid');
+                    if (invalidFields.length > 0) {
+                        invalidFields[0].focus();
+                        invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            }
+        });
+    </script>
+}
