@@ -6,41 +6,7 @@ A comprehensive e-commerce web application for book management and sales, built 
 
 BookHub-MVC is a full-featured online bookstore that provides a complete e-commerce solution for book retailers. The application supports multiple user roles, shopping cart functionality, order management, and secure payment processing through Stripe integration.
 
-## 🔗 Repository
 
-**GitHub Repository**: [MahmoudAbdelrahman2002/BookHub-MVC](https://github.com/MahmoudAbdelrahman2002/BookHub-MVC)
-
-## 🚀 Projects
-
-### 🌐 Web Development Projects
-
-#### 📚 BookHub-MVC - E-Commerce Bookstore
-**[MahmoudAbdelrahman2002/BookHub-MVC](https://github.com/MahmoudAbdelrahman2002/BookHub-MVC)**
-
-A full-featured online bookstore built with modern web development technologies, showcasing advanced e-commerce functionality and clean architecture patterns.
-
-**🛠️ Technologies:**
-- **Backend:** ASP.NET Core 9.0 MVC, Entity Framework Core, SQL Server
-- **Frontend:** Bootstrap 5, jQuery, CSS3, Bootstrap Icons
-- **Authentication:** ASP.NET Core Identity, Facebook Login
-- **Payments:** Stripe API Integration
-- **Architecture:** N-tier with Repository & Unit of Work patterns
-
-**⭐ Key Features:**
-- Complete e-commerce solution with shopping cart and order management
-- Multi-role authentication system (Admin, Customer, Employee, Company)
-- Secure payment processing with Stripe integration
-- Responsive UI with modern Bootstrap 5 design
-- Admin dashboard for product and user management
-- Social authentication and email confirmation
-
-**📈 Highlights:**
-- Clean, scalable architecture following industry best practices
-- Comprehensive user role management system
-- Production-ready payment integration
-- Mobile-responsive design optimized for all devices
-
----
 
 ## ✨ Features
 
